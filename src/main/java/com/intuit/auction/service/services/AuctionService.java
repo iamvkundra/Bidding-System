@@ -1,5 +1,7 @@
 package com.intuit.auction.service.services;
 
-public interface AuctionService {
+import com.intuit.auction.service.dto.AuctionRequest;
 
+public interface AuctionService {
+    void createAuction(AuctionRequest auctionRequest) throws Exception;
 }

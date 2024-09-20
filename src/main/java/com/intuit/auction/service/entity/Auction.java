@@ -1,21 +1,21 @@
-package com.intuit.auction.service.model;
+package com.intuit.auction.service.entity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.intuit.auction.service.model.Account.Customer;
-import com.intuit.auction.service.model.Account.Vendor;
+import com.intuit.auction.service.entity.account.Vendor;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity(name = "auction")
 @Data
+@AllArgsConstructor
 public class Auction {
 
     @Id
@@ -32,9 +32,15 @@ public class Auction {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    @ManyToOne
-    @JoinColumn(name="customer_username", referencedColumnName = "username")
-    private Customer highestBidder;
-
+    private double auctionBasePrice;
     private double highestBiddingPrice;
+
+    public Auction() { }
+    public Auction (Vendor vendor, Product product, LocalDateTime startTime, LocalDateTime endTime, double auctionBasePrice) {
+        this.vendor = vendor;
+        this.startTime= startTime;
+        this.endTime = endTime;
+        this.product = product;
+        this.auctionBasePrice = auctionBasePrice;
+    }
 }

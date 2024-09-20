@@ -2,14 +2,13 @@ package com.intuit.auction.service.services;
 
 import java.util.Optional;
 
-import com.intuit.auction.service.enums.AccountType;
-import com.intuit.auction.service.model.Account.Account;
-import com.intuit.auction.service.model.Account.AccountRequest;
-import com.intuit.auction.service.model.Account.AccountResponse;
+import com.intuit.auction.service.entity.account.Account;
+import com.intuit.auction.service.dto.AccountRequest;
+import com.intuit.auction.service.dto.AccountResponse;
 
-import com.intuit.auction.service.model.Account.Customer;
-import com.intuit.auction.service.model.Account.Vendor;
-import com.intuit.auction.service.model.User;
+import com.intuit.auction.service.entity.account.Customer;
+import com.intuit.auction.service.entity.account.Vendor;
+import com.intuit.auction.service.entity.account.User;
 import com.intuit.auction.service.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,18 +40,12 @@ public class AccountService {
         return null;
     }
 
-    public AccountResponse getUserByUsername(String username) {
+    public Account getUserByUsername(String username) {
         Optional<Account> account = accountRepository.findById(username);
-        return account.map(this::createAccountResponse).orElse(null);
+        return account.orElse(null);
     }
 
     private User createUser(AccountRequest accountRequest) {
         return new User(accountRequest.getName(), accountRequest.getEmail(), accountRequest.getMobileNumber());
-    }
-
-    private AccountResponse createAccountResponse(Account account) {
-        AccountResponse accountResponse = new AccountResponse(account.getUsername(), account.getUser().getName(),
-                account.getUser().getEmail(),account.getUser().getMobileNumber());
-        return accountResponse;
     }
 }

@@ -1,4 +1,4 @@
-package com.intuit.auction.service.model.Account;
+package com.intuit.auction.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

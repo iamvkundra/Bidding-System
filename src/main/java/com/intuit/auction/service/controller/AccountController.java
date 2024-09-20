@@ -1,9 +1,9 @@
 package com.intuit.auction.service.controller;
 
-import static com.intuit.auction.service.commons.Constants.BASE_ACCOUNT;
+import static com.intuit.auction.service.commons.Constants.ACCOUNT_SERVICE;
 
-import com.intuit.auction.service.model.Account.AccountRequest;
-import com.intuit.auction.service.model.Account.AccountResponse;
+import com.intuit.auction.service.dto.AccountRequest;
+import com.intuit.auction.service.dto.AccountResponse;
 import com.intuit.auction.service.services.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(BASE_ACCOUNT)
+@RequestMapping(ACCOUNT_SERVICE)
 public class AccountController {
 
     @Autowired

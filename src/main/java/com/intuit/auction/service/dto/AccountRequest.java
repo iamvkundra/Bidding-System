@@ -1,4 +1,4 @@
-package com.intuit.auction.service.model.Account;
+package com.intuit.auction.service.dto;
 
 import com.intuit.auction.service.enums.AccountType;
 import jakarta.persistence.EnumType;

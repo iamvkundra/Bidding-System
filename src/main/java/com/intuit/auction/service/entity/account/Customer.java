@@ -1,7 +1,5 @@
-package com.intuit.auction.service.model.Account;
+package com.intuit.auction.service.entity.account;
 
-import com.intuit.auction.service.enums.AccountType;
-import com.intuit.auction.service.model.User;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 

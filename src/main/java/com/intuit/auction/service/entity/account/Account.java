@@ -1,6 +1,5 @@
-package com.intuit.auction.service.model.Account;
+package com.intuit.auction.service.entity.account;
 
-import com.intuit.auction.service.model.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;

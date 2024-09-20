@@ -1,4 +1,4 @@
-package com.intuit.auction.service.model;
+package com.intuit.auction.service.entity;
 
 import java.util.UUID;
 
@@ -21,6 +21,5 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductCategory productCategory;
 
-    private double productBasePrice;
     private String description;
 }
