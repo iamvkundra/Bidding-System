@@ -1,0 +1,49 @@
+buildscript {
+	ext {
+		h2DatabaseVersion:"2.3.232"
+	}
+}
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.3'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.inutit.auction'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok:1.18.34'
+	implementation 'org.projectlombok:lombok:1.18.34' // Use the latest version
+	annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+	implementation 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14' // Check for the latest version
+
+	implementation 'javax.servlet:javax.servlet-api:4.0.1' // or another compatible version
+
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
