@@ -50,5 +50,4 @@ public class BiddingController {
         List<Bid> bids = biddingService.getBidsByUsername(username);
         return new ResponseEntity<>(bids, HttpStatus.OK);
     }
-
 }

@@ -5,7 +5,7 @@
     <property name="severity" value="error"/>
 
     <module name="FileTabCharacter">
-        <property name="eachLine" value="true"/>
+        <property name="eachLine" value="false"/>
     </module>
 
     <module name="TreeWalker">
@@ -13,11 +13,9 @@
         <module name="UnusedImports"/>
         <module name="RedundantImport"/>
         <module name="ImportOrder">
-            <property name="groups" value="/^javax?\./,/^(?!com\.vmware\.)[a-z]/"/>
-            <property name="staticGroups" value="/^javax?\./,/^(?!com\.vmware\.)[a-z]/"/>
+            <property name="groups" value="/^javax?\./,/^(?!com\.intuit\.)[a-z]/"/>
             <property name="ordered" value="true"/>
             <property name="separated" value="true"/>
-            <property name="separatedStaticGroups" value="true"/>
             <property name="option" value="top"/>
         </module>
         <module name="RequireThis">
@@ -70,10 +68,9 @@
             <property name="lineWrappingIndentation" value="8"/>
             <property name="arrayInitIndent" value="4"/>
         </module>
-    </module>
-
-    <module name="LineLength">
-        <property name="max" value="120"/>
+        <module name="LineLength">
+            <property name="max" value="120"/>
+        </module>
     </module>
 
     <module name="Header">
@@ -94,6 +91,6 @@
         <property name="message" value="Trailing whitespace"/>
     </module>
     <module name="FileLength">
-        <property name="max" value="3500"/>
+        <property name="max" value="3000"/>
     </module>
 </module>

@@ -35,7 +35,7 @@ public class BiddingServiceImpl implements BiddingService {
 
     @Override
     public void placeBid(BidRequest bidRequest) throws Exception {
-        Account customer = accountService.getUserByUsername(bidRequest.getCustomerUsername());
+        Account customer = accountService.getAccount(bidRequest.getCustomerUsername());
 
         if (customer instanceof Vendor) throw new Exception("Vendor account has no bidding access");
         Auction auction = auctionService.getAuctionDetails(bidRequest.getAuctionId());

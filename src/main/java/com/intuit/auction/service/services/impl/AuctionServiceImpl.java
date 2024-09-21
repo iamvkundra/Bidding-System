@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.intuit.auction.service.dto.AccountResponseDto;
 import com.intuit.auction.service.dto.AuctionFilter;
 import com.intuit.auction.service.dto.AuctionRegistrationDto;
 import com.intuit.auction.service.entity.Auction;
@@ -12,6 +13,7 @@ import com.intuit.auction.service.entity.account.Account;
 import com.intuit.auction.service.dto.AuctionRequest;
 import com.intuit.auction.service.entity.account.Customer;
 import com.intuit.auction.service.entity.account.Vendor;
+import com.intuit.auction.service.enums.AccountType;
 import com.intuit.auction.service.enums.AuctionStatus;
 import com.intuit.auction.service.exceptions.AccountNotFoundException;
 import com.intuit.auction.service.repositories.AuctionRegistrationRepository;
@@ -44,7 +46,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public void createAuction(AuctionRequest auctionRequest) throws Exception {
-        Account account = accountService.getUserByUsername(auctionRequest.getVendorUsername());
+        Account account = accountService.getAccount(auctionRequest.getVendorUsername());
 
         if (account == null || (account instanceof Customer))
             throw new AccountNotFoundException("Account does not Exist or Customer account cannot create Auction.");
@@ -94,7 +96,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public void registerUserForAuction(AuctionRegistrationDto auctionRegistration)
             throws Exception {
-        Account account = accountService.getUserByUsername(auctionRegistration.getUsername());
+        Account account = accountService.getAccount(auctionRegistration.getUsername());
         if (account instanceof Vendor) throw new Exception("Vendor can't register for auction");
         Optional<Auction> auction = auctionRepository.findById(auctionRegistration.getAuctionId());
         auctionRegistrationRepository.save(new AuctionRegistration((Customer) account, auction.get()));
@@ -104,7 +106,7 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public boolean isUserRegisteredForAuction(String customerId, String auctionId) throws Exception {
-        Account account = accountService.getUserByUsername(customerId);
+        Account account = accountService.getAccount(customerId);
         if (account instanceof Vendor) throw new Exception("Vendor Cannot register into auction");
 
         Optional<Auction> auction = auctionRepository.findById(auctionId);

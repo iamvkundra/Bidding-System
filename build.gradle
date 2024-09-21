@@ -17,7 +17,9 @@ java {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
-
+allprojects {
+//	apply plugin: 'checkstyle'
+}
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -37,19 +39,17 @@ dependencies {
 
 	implementation 'com.h2database:h2'
 
-
-//	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0' // Check for the latest version
-
 	// SpringDoc OpenAPI (Swagger)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-
-
-
-//	implementation 'javax.servlet:javax.servlet-api:4.0.1' // or another compatible version
 
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+//checkstyle {
+//	toolVersion '8.20'
+//	configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()
