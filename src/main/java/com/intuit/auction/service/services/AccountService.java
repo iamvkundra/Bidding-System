@@ -41,11 +41,15 @@ public class AccountService {
     }
 
     public Account getUserByUsername(String username) {
-        Optional<Account> account = accountRepository.findById(username);
+         Optional<Account> account = accountRepository.findById(username);
         return account.orElse(null);
     }
 
     private User createUser(AccountRequest accountRequest) {
         return new User(accountRequest.getName(), accountRequest.getEmail(), accountRequest.getMobileNumber());
+    }
+
+    public boolean isLoggedIn(String username) {
+        return true;
     }
 }

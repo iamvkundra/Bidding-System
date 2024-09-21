@@ -14,6 +14,12 @@ spring:
       ddl-auto: update
     show-sql: true
 
+logging:
+  file:
+    name: logs/myapp.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
 springdoc:
   api-docs.path: /auction-system/api/docs/v3/api-docs
