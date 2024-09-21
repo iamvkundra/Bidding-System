@@ -30,25 +30,25 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 	compileOnly 'org.projectlombok:lombok:1.18.34'
-	implementation 'org.projectlombok:lombok:1.18.34' // Use the latest version
 	annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
 	implementation 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0' // Check for the latest version
 
-// https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
-	implementation 'io.springfox:springfox-swagger2:3.0.0'
-	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+//	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0' // Check for the latest version
+
+	// SpringDoc OpenAPI (Swagger)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
 
 
-	implementation 'javax.servlet:javax.servlet-api:4.0.1' // or another compatible version
+//	implementation 'javax.servlet:javax.servlet-api:4.0.1' // or another compatible version
 
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

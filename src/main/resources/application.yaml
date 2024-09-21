@@ -22,8 +22,8 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
 springdoc:
-  api-docs.path: /auction-system/api/docs/v3/api-docs
-  swagger-ui.path: /auction-system/api/docs/
   api-docs:
-    groups:
-      enabled: true
+    path: /auction-system/api/docs/v3/api-docs
+  swagger-ui:
+    path: /auction-system/api/docs/swagger-ui.html
+  packages-to-scan: com.intuit.auction
