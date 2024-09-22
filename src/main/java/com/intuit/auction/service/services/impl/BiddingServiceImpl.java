@@ -1,9 +1,11 @@
 package com.intuit.auction.service.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.intuit.auction.service.dto.BidRequest;
+import com.intuit.auction.service.dto.BidResponse;
 import com.intuit.auction.service.entity.Auction;
 import com.intuit.auction.service.entity.Bid;
 import com.intuit.auction.service.entity.account.Account;
@@ -11,12 +13,14 @@ import com.intuit.auction.service.entity.account.Customer;
 import com.intuit.auction.service.entity.account.Vendor;
 import com.intuit.auction.service.enums.AuctionStatus;
 import com.intuit.auction.service.exceptions.BiddingException;
+import com.intuit.auction.service.repositories.AuctionRepository;
 import com.intuit.auction.service.repositories.BidRepository;
 import com.intuit.auction.service.services.AccountService;
 import com.intuit.auction.service.services.AuctionService;
 import com.intuit.auction.service.services.BiddingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,20 +30,49 @@ public class BiddingServiceImpl implements BiddingService {
     private final BidRepository bidRepository;
     private final AccountService accountService;
     private final AuctionService auctionService;
+    private final AuctionRepository auctionRepository;
 
-    public BiddingServiceImpl(BidRepository bidRepository, AccountService accountService, AuctionService auctionService) {
+    @Autowired
+    public BiddingServiceImpl(BidRepository bidRepository, AccountService accountService,
+                              AuctionService auctionService, AuctionRepository auctionRepository) {
         this.bidRepository = bidRepository;
         this.accountService = accountService;
         this.auctionService = auctionService;
+        this.auctionRepository = auctionRepository;
     }
 
     @Override
-    public void placeBid(BidRequest bidRequest) throws Exception {
-        Account customer = accountService.getAccount(bidRequest.getCustomerUsername());
-
-        if (customer instanceof Vendor) throw new Exception("Vendor account has no bidding access");
+    public void placeBid(String username, BidRequest bidRequest) throws Exception {
+        Account customer = accountService.getAccount(username);
         Auction auction = auctionService.getAuctionDetails(bidRequest.getAuctionId());
+        validateBidding(customer,auction, bidRequest);
 
+        Bid bid = new Bid(auction, (Customer) customer, bidRequest.getBidAmount());
+        bidRepository.save(bid);
+
+        updateAuctionWithNewBid(auction, bid);
+        log.info("username: {} successfully placed bid: {}", customer.getUsername(), bid.getBidId());
+    }
+
+    @Override
+    public List<BidResponse> getAuctionBids(String auctionId) {
+        List<Bid> bids =  bidRepository.findByAuctionId(auctionId);
+        return createBidResponse(bids);
+    }
+
+    @Override
+    public List<BidResponse> getBidsByAuctionIdAndCustomerId(String customerUsername, String auctionId) {
+        List<Bid> bids = bidRepository.findByCustomer_UsernameAndAuction_AuctionId(customerUsername, auctionId);
+        return createBidResponse(bids);
+    }
+
+    @Override
+    public List<BidResponse> getBidsByUsername(String customerUsername) {
+        List<Bid> bids = bidRepository.findByCustomer_Username(customerUsername);
+        return createBidResponse(bids);
+    }
+
+    private void validateBidding(Account customer, Auction auction, BidRequest bidRequest) throws Exception {
         if (!auction.getAuctionStatus().equals(AuctionStatus.ACTIVE)) {
             throw new Exception("Cannot Bid into Scheduled or Closed Bid");
         }
@@ -51,27 +84,25 @@ public class BiddingServiceImpl implements BiddingService {
         if (auction.getAuctionBasePrice() > bidRequest.getBidAmount()) {
             throw new BiddingException("Customer Bidding amount is less than auctionBaseAmount: " + auction.getAuctionBasePrice());
         }
-
-        Bid bid = new Bid(auction, (Customer) customer, bidRequest.getBidAmount());
-        bidRepository.save(bid);
-        log.info("username: {} successfully placed bid: {}", customer.getUsername(), bid.getBidId());
     }
 
-    @Override
-    public List<Bid> getAuctionBids(String auctionId) {
-        List<Bid> bids =  bidRepository.findByAuctionId(auctionId);
-        return bids;
+    private List<BidResponse> createBidResponse(List<Bid> bids) {
+        List<BidResponse> response = new ArrayList<>();
+        for (Bid bid : bids) {
+            BidResponse bidResponse = new BidResponse();
+            bidResponse.setBidAmount(bid.getAmount());
+            bidResponse.setTimeOfBid(bid.getBidTime());
+            bidResponse.setUsername(bid.getCustomer().getUsername());
+            bidResponse.setBidId(bid.getBidId());
+            response.add(bidResponse);
+        }
+        return response;
     }
 
-    @Override
-    public List<Bid> getBidsByAuctionIdAndCustomerId(String customerUsername, String auctionId) {
-        List<Bid> bids = bidRepository.findByCustomer_UsernameAndAuction_AuctionId(customerUsername, auctionId);
-        return bids;
-    }
-
-    @Override
-    public List<Bid> getBidsByUsername(String customerUsername) {
-        List<Bid> bids = bidRepository.findByCustomer_Username(customerUsername);
-        return bids;
+    private void updateAuctionWithNewBid(Auction auction, Bid newBid) {
+        if (auction.getHighestBid() == null || auction.getHighestBid().getAmount() < newBid.getAmount()) {
+            auction.setHighestBid(newBid);
+            auctionRepository.save(auction);
+        }
     }
 }

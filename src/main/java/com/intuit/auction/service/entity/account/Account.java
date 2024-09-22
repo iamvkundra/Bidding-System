@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "account")
@@ -21,18 +22,19 @@ import lombok.Getter;
 public class Account {
 
     public Account() {}
+
     @Id
     @Getter
     private String username;
+
+    @Getter
+    @Setter
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @Getter
     private User user;
-
-    @Getter
-    private boolean isLoggedIn;
 
     public Account(String username, String password, User user) {
         this.username = username;

@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class AuctionRequest {
-    private String vendorUsername;
     private Product product;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

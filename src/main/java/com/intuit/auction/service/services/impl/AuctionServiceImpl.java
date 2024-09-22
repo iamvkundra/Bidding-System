@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.intuit.auction.service.dto.AccountResponseDto;
 import com.intuit.auction.service.dto.AuctionFilter;
 import com.intuit.auction.service.dto.AuctionRegistrationDto;
+import com.intuit.auction.service.dto.AuctionResponseDto;
 import com.intuit.auction.service.entity.Auction;
 import com.intuit.auction.service.entity.AuctionRegistration;
 import com.intuit.auction.service.entity.account.Account;
@@ -45,11 +46,8 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public void createAuction(AuctionRequest auctionRequest) throws Exception {
-        Account account = accountService.getAccount(auctionRequest.getVendorUsername());
-
-        if (account == null || (account instanceof Customer))
-            throw new AccountNotFoundException("Account does not Exist or Customer account cannot create Auction.");
+    public void createAuction(String username, AuctionRequest auctionRequest) throws Exception {
+        Account account = accountService.getAccount(username);
 
         Auction auction = new Auction((Vendor) account, auctionRequest.getProduct(), auctionRequest.getStartTime(),
                 auctionRequest.getEndTime(),auctionRequest.getAuctionBasePrice());
@@ -69,9 +67,10 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public void closeAuction(String vendorUsername, String auctionId) throws Exception {
+    public void closeAuction(String username, String auctionId) throws Exception {
         boolean checkIfVendorIsCorrectForGivenAuction = auctionRepository
-                .checkAuctionByVendorUsername(vendorUsername, auctionId);
+                .checkAuctionByVendorUsername(username, auctionId);
+
         if (checkIfVendorIsCorrectForGivenAuction) {
             auctionRepository.updateAuctionStatusByAuctionId(AuctionStatus.CLOSED, auctionId);
         }else {
@@ -80,39 +79,70 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public List<Auction> searchAuction(AuctionFilter filter) {
+    public AuctionResponseDto getAuctionById(String auctionId) {
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
+        return auction.map(this::createAuctionResponseId).orElse(null);
+    }
+
+    @Override
+    public List<AuctionResponseDto> searchAuction(AuctionFilter filter) {
         return auctionRepository.findByProductCategoryInAndAuctionStatusIn(
                 filter.getProductCategory(),
                 filter.getAuctionStatuses()
-        );
+        ).stream().map(this::createAuctionResponseId).toList();
     }
 
     @Override
     public Auction getAuctionDetails(String auctionId) {
         Optional<Auction> auction =  auctionRepository.findById(auctionId);
-        return auction.isPresent() ? auction.get() : null;
+        return auction.orElse(null);
     }
 
     @Override
-    public void registerUserForAuction(AuctionRegistrationDto auctionRegistration)
+    public void registerUserForAuction(String username, String auctionId)
             throws Exception {
-        Account account = accountService.getAccount(auctionRegistration.getUsername());
-        if (account instanceof Vendor) throw new Exception("Vendor can't register for auction");
-        Optional<Auction> auction = auctionRepository.findById(auctionRegistration.getAuctionId());
-        auctionRegistrationRepository.save(new AuctionRegistration((Customer) account, auction.get()));
-        log.info("Username: {} Successfully Registered for auctionId: {}", account.getUsername(),
-                auctionRegistration.getAuctionId());
+        try {
+            Account account = accountService.getAccount(username);
+            Optional<Auction> auction = auctionRepository.findById(auctionId);
+
+            boolean checkAlreadyRegistered = auctionRegistrationRepository
+                    .existsByCustomerUsernameAndAuctionId((Customer) account, auction.get());
+
+            if (checkAlreadyRegistered) {
+                throw new Exception("This account is already registered for auction: " + auctionId);
+            }
+            auctionRegistrationRepository.save(new AuctionRegistration((Customer) account, auction.get()));
+            log.info("Username: {} Successfully Registered for auctionId: {}", account.getUsername(),
+                    auctionId);
+        } catch (Exception e) {
+            log.error("Something went wrong while registering user for auction", e.getCause());
+            throw new Exception(e);
+        }
     }
 
     @Override
     public boolean isUserRegisteredForAuction(String customerId, String auctionId) throws Exception {
         Account account = accountService.getAccount(customerId);
-        if (account instanceof Vendor) throw new Exception("Vendor Cannot register into auction");
-
         Optional<Auction> auction = auctionRepository.findById(auctionId);
-        if (!auction.isPresent()) {
+
+        if (auction.isEmpty()) {
+            log.error("Auction id is invalid. Not Found");
             throw new Exception("Invalid Auction Id");
         }
         return auctionRegistrationRepository.existsByCustomerUsernameAndAuctionId((Customer) account, auction.get());
     }
+
+    private AuctionResponseDto createAuctionResponseId(Auction auction) {
+        AuctionResponseDto auctionResponseDto = new AuctionResponseDto();
+        auctionResponseDto.setAuctionId(auction.getAuctionId());
+        auctionResponseDto.setProduct(auction.getProduct());
+        auctionResponseDto.setEndTime(auction.getEndTime());
+        auctionResponseDto.setAuctionBasePrice(auction.getAuctionBasePrice());
+        auctionResponseDto.setHighestBid(auction.getHighestBid() == null ? 0.0 : auction.getHighestBid().getAmount());
+        auctionResponseDto.setStartTime(auction.getStartTime());
+        auctionResponseDto.setAuctionStatus(auction.getAuctionStatus());
+        auctionResponseDto.setVendorUsername(auction.getVendor() != null ? auction.getVendor().getUsername() : null);
+        return auctionResponseDto;
+    }
+
 }

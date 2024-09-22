@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.intuit.auction.service.entity.Auction;
-import com.intuit.auction.service.entity.AuctionRegistration;
 import com.intuit.auction.service.entity.Bid;
 import com.intuit.auction.service.enums.AuctionStatus;
 import com.intuit.auction.service.repositories.AuctionRepository;

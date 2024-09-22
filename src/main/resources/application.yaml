@@ -13,17 +13,24 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  main:
+    allow-circular-references: true
 
 logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
   file:
     name: logs/myapp.log
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
+
 springdoc:
   api-docs:
-    path: /auction-system/api/docs/v3/api-docs
+    path: /api/docs/v3/api-docs
   swagger-ui:
-    path: /auction-system/api/docs/swagger-ui.html
+    path: /api/docs/swagger-ui.html
   packages-to-scan: com.intuit.auction

@@ -9,6 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BidRequest {
     private String auctionId;
-    private String customerUsername;
     private double bidAmount;
 }

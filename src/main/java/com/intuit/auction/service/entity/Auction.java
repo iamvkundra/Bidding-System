@@ -1,6 +1,7 @@
 package com.intuit.auction.service.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 import com.intuit.auction.service.entity.account.Customer;
