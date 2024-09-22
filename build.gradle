@@ -49,6 +49,12 @@ dependencies {
 	implementation 'com.h2database:h2'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
+	// JavaMail API
+	implementation 'com.sun.mail:javax.mail:1.6.2'
+
+	// If you're using Spring Boot, you might want to use this instead:
+	// implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

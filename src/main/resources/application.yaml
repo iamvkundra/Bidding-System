@@ -16,6 +16,10 @@ spring:
   main:
     allow-circular-references: true
 
+email:
+  sender: mkmayank39@gmail.com
+  host: localhost
+
 logging:
   level:
     org:

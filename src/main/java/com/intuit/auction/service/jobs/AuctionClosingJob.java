@@ -6,6 +6,9 @@ import java.util.List;
 import com.intuit.auction.service.entity.Auction;
 import com.intuit.auction.service.entity.Bid;
 import com.intuit.auction.service.enums.AuctionStatus;
+import com.intuit.auction.service.enums.NotificationType;
+import com.intuit.auction.service.notifications.NotificationManager;
+import com.intuit.auction.service.notifications.dto.NotificationRequest;
 import com.intuit.auction.service.repositories.AuctionRepository;
 import com.intuit.auction.service.repositories.BidRepository;
 import org.slf4j.Logger;
@@ -24,6 +27,9 @@ public class AuctionClosingJob {
     @Autowired
     private BidRepository bidRepository;
 
+    @Autowired
+    private NotificationManager notificationManager;
+
     @Scheduled(cron = "0 * * * * *")
     public void closeExpiredAuctions() {
         LocalDateTime now = LocalDateTime.now();
@@ -37,7 +43,14 @@ public class AuctionClosingJob {
             if (winningBid != null) {
                 auction.setWinner(winningBid.getCustomer());
                 auction.setWinningBid(winningBid);
-                //Notification.
+
+                NotificationRequest notificationRequest = new NotificationRequest();
+                notificationRequest.setNotificationType(NotificationType.EMAIL);
+                notificationRequest.setRecipientEmail(auction.getWinner().getUser().getEmail());
+                notificationRequest.setSubject("You have successfully won the auction: " + auction.getAuctionId());
+                notificationRequest.setSubject("Please contact vendor with given auctionId and product: "+ auction.getProduct().getProductName());
+
+                notificationManager.queueNotification(new NotificationRequest());
             }
             auctionRepository.save(auction);
         }
