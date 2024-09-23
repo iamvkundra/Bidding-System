@@ -23,6 +23,7 @@ email:
 logging:
   level:
     org:
+      hibernate: false
       springframework:
         security: DEBUG
   file:

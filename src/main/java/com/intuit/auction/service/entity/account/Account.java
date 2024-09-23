@@ -25,6 +25,7 @@ public class Account {
 
     @Id
     @Getter
+    @Setter
     private String username;
 
     @Getter

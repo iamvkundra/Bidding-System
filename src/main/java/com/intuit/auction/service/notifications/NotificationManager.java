@@ -9,6 +9,7 @@ import com.intuit.auction.service.enums.NotificationType;
 import com.intuit.auction.service.notifications.dto.NotificationRequest;
 import com.intuit.auction.service.notifications.impl.EmailNotificationService;
 import com.intuit.auction.service.notifications.impl.SmsNotificationService;
+import com.intuit.auction.service.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,7 +32,7 @@ public class NotificationManager {
 
     public void queueNotification(NotificationRequest request) {
         this.notificationQueue.offer(request);
-        log.info("Notification queued for {}: {}", request.getNotificationType(), request.getRecipientEmail());
+        log.info("Notification queued for {}", CommonUtils.toJson(request, false));
     }
 
     @Scheduled(fixedRate = 60000)

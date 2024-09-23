@@ -48,21 +48,18 @@ dependencies {
 
 	implementation 'com.h2database:h2'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'org.glassfish:javax.el:3.0.0'
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+	implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
 
-	// JavaMail API
 	implementation 'com.sun.mail:javax.mail:1.6.2'
 
-	// If you're using Spring Boot, you might want to use this instead:
-	// implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.1'
 }
-
-//checkstyle {
-//	toolVersion '8.20'
-//	configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-//}
 
 tasks.named('test') {
 	useJUnitPlatform()

@@ -7,11 +7,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class AccountRequest {
 
-    @NotBlank(message = "Type is required")
     @Enumerated(EnumType.STRING)
     private AccountType accountType; // "vendor" or "customer"
 

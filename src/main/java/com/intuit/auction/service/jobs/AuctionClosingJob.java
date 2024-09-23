@@ -50,7 +50,7 @@ public class AuctionClosingJob {
                 notificationRequest.setSubject("You have successfully won the auction: " + auction.getAuctionId());
                 notificationRequest.setSubject("Please contact vendor with given auctionId and product: "+ auction.getProduct().getProductName());
 
-                notificationManager.queueNotification(new NotificationRequest());
+                notificationManager.queueNotification(notificationRequest);
             }
             auctionRepository.save(auction);
         }
