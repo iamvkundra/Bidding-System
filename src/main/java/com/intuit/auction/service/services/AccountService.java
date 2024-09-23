@@ -16,8 +16,10 @@ import com.intuit.auction.service.entity.account.Customer;
 import com.intuit.auction.service.entity.account.Vendor;
 import com.intuit.auction.service.entity.account.User;
 import com.intuit.auction.service.enums.AccountType;
+import com.intuit.auction.service.exceptions.AccountException;
 import com.intuit.auction.service.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,25 +45,31 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AccountResponseDto createAccount(AccountRequest request) throws Exception {
-        Account account = null;
-        User user = createUser(request);
-        switch (request.getAccountType()) {
-            case VENDOR:
-                account = new Vendor(request.getUsername(), request.getPassword(), user);
-                break;
-            case CUSTOMER:
-                account = new Customer(request.getUsername(), request.getPassword(), user);
-                break;
-            default:
-                break;
+    public AccountResponseDto createAccount(AccountRequest request) {
+        try {
+            Account account = null;
+            User user = createUser(request);
+            switch (request.getAccountType()) {
+                case VENDOR:
+                    account = new Vendor(request.getUsername(), request.getPassword(), user);
+                    break;
+                case CUSTOMER:
+                    account = new Customer(request.getUsername(), request.getPassword(), user);
+                    break;
+                default:
+                    break;
+            }
+
+            String hash = passwordEncoder.encode(account.getPassword());
+            account.setPassword(hash);
+
+            accountRepository.save(account);
+            return createAccountResponse(account);
+        } catch (DataIntegrityViolationException exception) {
+            throw new AccountException("username-email exist: "+ exception.getMessage(), exception);
+        } catch (Exception ex) {
+            throw new AccountException("Failed to create account: " + ex.getMessage(), ex);
         }
-
-        String hash = passwordEncoder.encode(account.getPassword());
-        account.setPassword(hash);
-
-        accountRepository.save(account);
-        return createAccountResponse(account);
     }
 
     public AccountResponseDto getUserByUsername(String username) {

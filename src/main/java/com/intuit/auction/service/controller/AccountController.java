@@ -9,6 +9,7 @@ import com.intuit.auction.service.dto.AccountRequest;
 import com.intuit.auction.service.dto.AccountResponseDto;
 import com.intuit.auction.service.dto.LoginRequest;
 import com.intuit.auction.service.dto.LoginResponseDto;
+import com.intuit.auction.service.exceptions.AccountException;
 import com.intuit.auction.service.services.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -33,9 +34,16 @@ public class AccountController {
     @PostMapping("/register")
     @Operation(summary = "Create an account",
             description = "Create an account(VENDOR or CUSTOMER)")
-    public ResponseEntity<?> createAccount(@RequestBody @Valid AccountRequest accountRequest) throws Exception {
-        AccountResponseDto accountResponse = accountService.createAccount(accountRequest);
-        return new ResponseEntity<>(accountResponse, HttpStatus.CREATED);
+    public ResponseEntity<?> createAccount(@RequestBody @Valid AccountRequest accountRequest) {
+        try {
+            AccountResponseDto accountResponse = accountService.createAccount(accountRequest);
+            return new ResponseEntity<>(accountResponse, HttpStatus.CREATED);
+        } catch (AccountException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (Exception exception) {
+            return new ResponseEntity<>("An unexpected error occurred: "+ exception.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping
@@ -43,14 +51,24 @@ public class AccountController {
             description = "Get an account details by username of account")
     @PreAuthorize("hasAuthority('VENDOR') or hasAuthority('CUSTOMER')")
     public ResponseEntity<AccountResponseDto> getUserByUsername(Principal principal) {
-        return new ResponseEntity<>(accountService.getUserByUsername(principal.getName()), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(accountService.getUserByUsername(principal.getName()), HttpStatus.OK);
+        } catch (Exception exception) {
+            throw new AccountException("Failed to get account details: " + exception.getMessage(), exception);
+        }
     }
 
     @PostMapping("/login")
     @Operation(summary = "Login API",
             description = "login to the application using username and password")
-    public ResponseEntity<LoginResponseDto> authenticateAndGetToken(@RequestBody LoginRequest loginRequest) throws AuthenticationException {
-        LoginResponseDto loginResponseDto = accountService.login(loginRequest);
-        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+    public ResponseEntity<LoginResponseDto> authenticateAndGetToken(@RequestBody LoginRequest loginRequest) {
+        try {
+            LoginResponseDto loginResponseDto = accountService.login(loginRequest);
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+        }catch (AuthenticationException exception) {
+            throw new AccountException("Invalid username or password: " + exception.getMessage(), exception);
+        } catch (Exception exception) {
+            throw new AccountException("Login Failed: " + exception.getMessage(), exception);
+        }
     }
 }
