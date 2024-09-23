@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.intuit.auction.service.dto.AccountResponseDto;
 import com.intuit.auction.service.dto.AuctionFilter;
-import com.intuit.auction.service.dto.AuctionRegistrationDto;
 import com.intuit.auction.service.dto.AuctionResponseDto;
 import com.intuit.auction.service.entity.Auction;
 import com.intuit.auction.service.entity.AuctionRegistration;
@@ -14,9 +12,8 @@ import com.intuit.auction.service.entity.account.Account;
 import com.intuit.auction.service.dto.AuctionRequest;
 import com.intuit.auction.service.entity.account.Customer;
 import com.intuit.auction.service.entity.account.Vendor;
-import com.intuit.auction.service.enums.AccountType;
 import com.intuit.auction.service.enums.AuctionStatus;
-import com.intuit.auction.service.exceptions.AccountNotFoundException;
+import com.intuit.auction.service.jobs.AuctionManagement;
 import com.intuit.auction.service.repositories.AuctionRegistrationRepository;
 import com.intuit.auction.service.repositories.AuctionRepository;
 import com.intuit.auction.service.repositories.ProductRepository;
@@ -35,35 +32,45 @@ public class AuctionServiceImpl implements AuctionService {
     private final AuctionRepository auctionRepository;
     private final AuctionRegistrationRepository auctionRegistrationRepository;
     private final ProductRepository productRepository;
+    private final AuctionManagement auctionManagement;
 
     @Autowired
     public AuctionServiceImpl(AccountService auctionService, AuctionRepository auctionRepository,
-                              ProductRepository productRepository, AuctionRegistrationRepository auctionRegistrationRepository) {
+                              ProductRepository productRepository, AuctionRegistrationRepository
+                                          auctionRegistrationRepository, AuctionManagement auctionManagement) {
         this.accountService = auctionService;
         this.auctionRepository = auctionRepository;
         this.productRepository = productRepository;
         this.auctionRegistrationRepository = auctionRegistrationRepository;
+        this.auctionManagement = auctionManagement;
     }
 
     @Override
     public void createAuction(String username, AuctionRequest auctionRequest) throws Exception {
-        Account account = accountService.getAccount(username);
+        try {
+            Account account = accountService.getAccount(username);
 
-        Auction auction = new Auction((Vendor) account, auctionRequest.getProduct(), auctionRequest.getStartTime(),
-                auctionRequest.getEndTime(),auctionRequest.getAuctionBasePrice());
+            Auction auction = new Auction((Vendor) account, auctionRequest.getProduct(), auctionRequest.getStartTime(),
+                    auctionRequest.getEndTime(), auctionRequest.getAuctionBasePrice());
 
-        if (auction.getEndTime().isBefore(LocalDateTime.now())) {
-            throw new Exception("Cannot Create Auction with before time");
+            if (auction.getEndTime().isBefore(LocalDateTime.now())) {
+                throw new Exception("Cannot Create Auction with before time");
+            }
+
+            if (auction.getStartTime().isBefore(LocalDateTime.now())) {
+                auction.setAuctionStatus(AuctionStatus.ACTIVE);
+            } else if (auction.getStartTime().isAfter(LocalDateTime.now())) {
+                auction.setAuctionStatus(AuctionStatus.SCHEDULED);
+            }
+
+            productRepository.save(auction.getProduct());
+            auctionRepository.save(auction);
+            auctionManagement.addAuction(auction.getAuctionId(), auction.getStartTime(), auction.getEndTime(),
+                    auction.getAuctionStatus());
+
+        } catch (Exception exception) {
+            throw new Exception("Something went wrong: ", exception);
         }
-
-        if (auction.getStartTime().isBefore(LocalDateTime.now())) {
-            auction.setAuctionStatus(AuctionStatus.ACTIVE);
-        }else if (auction.getStartTime().isAfter(LocalDateTime.now())) {
-            auction.setAuctionStatus(AuctionStatus.SCHEDULED);
-        }
-
-        productRepository.save(auction.getProduct());
-        auctionRepository.save(auction);
     }
 
     @Override

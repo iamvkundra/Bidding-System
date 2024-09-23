@@ -37,7 +37,7 @@ public class NotificationManager {
 
     @Scheduled(fixedRate = 60000)
     public void processNotificationQueue() {
-        log.info("Processing notification queue. Current size: {}", notificationQueue.size());
+        log.info("LocalDateTime: " + LocalDateTime.now() + " Processing notification queue. Current size: {}", notificationQueue.size());
         LocalDateTime now = LocalDateTime.now();
         NotificationRequest request;
         while (!notificationQueue.isEmpty()) {

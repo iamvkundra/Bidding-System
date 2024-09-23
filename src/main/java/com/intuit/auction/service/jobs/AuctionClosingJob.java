@@ -30,7 +30,7 @@ public class AuctionClosingJob {
     @Autowired
     private NotificationManager notificationManager;
 
-    @Scheduled(cron = "0 * * * * *")
+    //@Scheduled(cron = "0 * * * * *")
     public void closeExpiredAuctions() {
         LocalDateTime now = LocalDateTime.now();
         log.info("Triggered closeExpiredAuctions Job at Time: {}", now);
@@ -51,7 +51,7 @@ public class AuctionClosingJob {
             auctionRepository.save(auction);
         }
     }
-
+    // [12:00], <string> [1:00] ->
     private static NotificationRequest getNotificationRequest(Auction auction) {
         NotificationRequest notificationRequest = new NotificationRequest();
         notificationRequest.setNotificationType(NotificationType.EMAIL);

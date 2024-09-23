@@ -30,4 +30,6 @@ public interface AuctionRepository extends JpaRepository<Auction, String> {
     List<Auction> findByEndTimeBeforeAndStatusNot(@Param("now") LocalDateTime now,
                                                   @Param("auctionStatus") AuctionStatus auctionStatus
     );
+
+    List<Auction> findByAuctionStatus(AuctionStatus auctionStatus);
 }
