@@ -44,15 +44,20 @@ public class AuctionClosingJob {
                 auction.setWinner(winningBid.getCustomer());
                 auction.setWinningBid(winningBid);
 
-                NotificationRequest notificationRequest = new NotificationRequest();
-                notificationRequest.setNotificationType(NotificationType.EMAIL);
-                notificationRequest.setRecipientEmail(auction.getWinner().getUser().getEmail());
-                notificationRequest.setSubject("You have successfully won the auction: " + auction.getAuctionId());
-                notificationRequest.setSubject("Please contact vendor with given auctionId and product: "+ auction.getProduct().getProductName());
+                NotificationRequest notificationRequest = getNotificationRequest(auction);
 
                 notificationManager.queueNotification(notificationRequest);
             }
             auctionRepository.save(auction);
         }
+    }
+
+    private static NotificationRequest getNotificationRequest(Auction auction) {
+        NotificationRequest notificationRequest = new NotificationRequest();
+        notificationRequest.setNotificationType(NotificationType.EMAIL);
+        notificationRequest.setRecipientEmail(auction.getWinner().getUser().getEmail());
+        notificationRequest.setSubject("You have successfully won the auction: " + auction.getAuctionId());
+        notificationRequest.setSubject("Please contact vendor with given auctionId and product: "+ auction.getProduct().getProductName());
+        return notificationRequest;
     }
 }

@@ -49,7 +49,7 @@ public class AccountController {
     @GetMapping
     @Operation(summary = "Get an account details",
             description = "Get an account details by username of account")
-    @PreAuthorize("hasAuthority('VENDOR') or hasAuthority('CUSTOMER')")
+    @PreAuthorize("isAuthenticated() and (hasAuthority('VENDOR') or hasAuthority('CUSTOMER'))")
     public ResponseEntity<AccountResponseDto> getUserByUsername(Principal principal) {
         try {
             return new ResponseEntity<>(accountService.getUserByUsername(principal.getName()), HttpStatus.OK);

@@ -73,8 +73,14 @@ public class AccountService {
     }
 
     public AccountResponseDto getUserByUsername(String username) {
+        try {
             Optional<Account> account = accountRepository.findById(username);
             return createAccountResponse(account.get());
+        } catch (AccountException exception) {
+            throw new AccountException("Failed to get Account Details: "+ exception.getMessage(), exception);
+        } catch (Exception exception) {
+            throw new AccountException("Something went wrong" + exception.getMessage(), exception);
+        }
     }
 
     public Account getAccount(String username) {
@@ -99,25 +105,31 @@ public class AccountService {
     }
 
     public LoginResponseDto login(LoginRequest loginRequest) throws AuthenticationException {
-        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        try {
+            LoginResponseDto loginResponseDto = new LoginResponseDto();
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            String authority = authentication.getAuthorities().stream()
-                    .findFirst()
-                    .map(GrantedAuthority::getAuthority)
-                    .orElseThrow(() -> new UsernameNotFoundException("No authorities found!"));
-            loginResponseDto.setUsername(loginRequest.getUsername());
-            loginResponseDto.setToken(jwtService.generateToken(loginRequest.getUsername(), authority));
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+            );
+            if (authentication.isAuthenticated()) {
+                String authority = authentication.getAuthorities().stream()
+                        .findFirst()
+                        .map(GrantedAuthority::getAuthority)
+                        .orElseThrow(() -> new UsernameNotFoundException("No authorities found!"));
+                loginResponseDto.setUsername(loginRequest.getUsername());
+                loginResponseDto.setToken(jwtService.generateToken(loginRequest.getUsername(), authority));
 
 
-            loginResponseDto.setAccountType(AccountType.getAccountType(authority));
-        } else {
-            throw new UsernameNotFoundException("Invalid user request!");
+                loginResponseDto.setAccountType(AccountType.getAccountType(authority));
+            } else {
+                throw new UsernameNotFoundException("Invalid user request!");
+            }
+            return loginResponseDto;
+        } catch (AccountException accountException) {
+            throw new AccountException("Error while login: "+accountException.getMessage(), accountException);
+        } catch (Exception exception) {
+            throw new AccountException("Something went wrong: "+ exception.getMessage(), exception);
         }
-        return loginResponseDto;
     }
 
 }
