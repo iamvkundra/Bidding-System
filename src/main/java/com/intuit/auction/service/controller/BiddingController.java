@@ -41,7 +41,7 @@ public class BiddingController {
     }
 
     @GetMapping("/{auctionId}")
-    @PreAuthorize("hasAuthority('VENDOR')")
+    @PreAuthorize("isAuthenticated() and hasAuthority('VENDOR')")
     public ResponseEntity<List<BidResponse>> getAllBidByAuctionId(@PathVariable("auctionId") String auctionId) {
         List<BidResponse> bids = biddingService.getAuctionBids(auctionId);
         return new ResponseEntity<>(bids, HttpStatus.OK);

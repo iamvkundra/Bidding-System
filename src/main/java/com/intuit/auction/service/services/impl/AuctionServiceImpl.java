@@ -49,15 +49,16 @@ public class AuctionServiceImpl implements AuctionService {
     public void createAuction(String username, AuctionRequest auctionRequest) throws Exception {
         try {
             Account account = accountService.getAccount(username);
-
             Auction auction = new Auction((Vendor) account, auctionRequest.getProduct(), auctionRequest.getStartTime(),
                     auctionRequest.getEndTime(), auctionRequest.getAuctionBasePrice());
 
-            if (auction.getEndTime().isBefore(LocalDateTime.now())) {
-                throw new Exception("Cannot Create Auction with before time");
+            if (auction.getEndTime().isBefore(LocalDateTime.now()) ||
+                    auction.getEndTime().isBefore(auction.getStartTime()) ||
+                    auction.getEndTime() == auction.getStartTime()) {
+                throw new Exception("Invalid start and end auction time.");
             }
 
-            if (auction.getStartTime().isBefore(LocalDateTime.now())) {
+            if (LocalDateTime.now().isAfter(auction.getStartTime()) && LocalDateTime.now().isBefore(auction.getEndTime())) {
                 auction.setAuctionStatus(AuctionStatus.ACTIVE);
             } else if (auction.getStartTime().isAfter(LocalDateTime.now())) {
                 auction.setAuctionStatus(AuctionStatus.SCHEDULED);
@@ -65,8 +66,12 @@ public class AuctionServiceImpl implements AuctionService {
 
             productRepository.save(auction.getProduct());
             auctionRepository.save(auction);
-            auctionManagement.addAuction(auction.getAuctionId(), auction.getStartTime(), auction.getEndTime(),
-                    auction.getAuctionStatus());
+
+            if (auction.getAuctionStatus().equals(AuctionStatus.ACTIVE)) {
+                auctionManagement.addAuction(auction.getAuctionId(), auction.getEndTime(), auction.getAuctionStatus());
+            }else {
+                auctionManagement.addAuction(auction.getAuctionId(), auction.getStartTime(), auction.getAuctionStatus());
+            }
 
         } catch (Exception exception) {
             throw new Exception("Something went wrong: ", exception);

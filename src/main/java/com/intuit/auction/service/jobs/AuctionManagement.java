@@ -1,6 +1,10 @@
 package com.intuit.auction.service.jobs;
 
+import static com.intuit.auction.service.utils.CommonUtils.getNotificationRequest;
+
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -17,6 +21,8 @@ import com.intuit.auction.service.notifications.dto.NotificationRequest;
 import com.intuit.auction.service.repositories.AuctionRepository;
 import com.intuit.auction.service.repositories.BidRepository;
 import com.intuit.auction.service.utils.CommonUtils;
+import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +35,8 @@ public class AuctionManagement {
 
     @Autowired
     private AuctionRepository auctionRepository;
-
     @Autowired
     private BidRepository bidRepository;
-
     @Autowired
     private NotificationManager notificationManager;
 
@@ -50,84 +54,83 @@ public class AuctionManagement {
         this.activeAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
     }
 
+    @PostConstruct
     public void initializeQueues() {
         LocalDateTime now = LocalDateTime.now();
-
-        // Handle scheduled auctions
-//        List<Auction> scheduledAuctions = auctionRepository.findByAuctionStatus(AuctionStatus.SCHEDULED);
-//        for (Auction auction : scheduledAuctions) {
-//            if (auction.getStartTime().isAfter(now)) {
-//                scheduledAuctionsQueue.offer(new AuctionTimeEntry(auction.getAuctionId(), auction.getStartTime()));
-//            } else if (auction.getEndTime().isAfter(now)) {
-//                activateAuction(auction);
-//                activeAuctionsQueue.offer(new AuctionTimeEntry(auction.getAuctionId(), auction.getEndTime()));
-//            } else {
-//                closeAuction(auction);
-//            }
-//        }
-
-        // Handle active auctions
         List<Auction> activeAuctions = auctionRepository.findByAuctionStatus(AuctionStatus.ACTIVE);
         for (Auction auction : activeAuctions) {
             if (auction.getEndTime().isAfter(now)) {
                 activeAuctionsQueue.offer(new AuctionTimeEntry(auction.getAuctionId(), auction.getEndTime()));
-                log.info("Adding into activeAuctionQueue: " + auction.getEndTime().isAfter(now) + " "+ CommonUtils.toJson(auction, false));
             } else {
-                log.info("Closing info activeAuctionQueue");
                 closeAuction(auction);
             }
         }
-
-        scheduleNextActivation();
         scheduleNextClosing();
     }
 
-    public void addAuction(String auctionId, LocalDateTime startTime, LocalDateTime endTime, AuctionStatus status) {
-        LocalDateTime now = LocalDateTime.now();
-        if (status == AuctionStatus.SCHEDULED && startTime.isAfter(now)) {
-            scheduledAuctionsQueue.offer(new AuctionTimeEntry(auctionId, startTime));
-            scheduleNextActivation();
-        } else if ((status == AuctionStatus.ACTIVE || (status == AuctionStatus.SCHEDULED && startTime.isBefore(now))) && endTime.isAfter(now)) {
-            activeAuctionsQueue.offer(new AuctionTimeEntry(auctionId, endTime));
+    public void addAuction(String auctionId, LocalDateTime auctionTime, AuctionStatus status) {
+        if (status.equals(AuctionStatus.ACTIVE)) {
+            activeAuctionsQueue.offer(new AuctionTimeEntry(auctionId, auctionTime));
             scheduleNextClosing();
+        } else if (status.equals(AuctionStatus.SCHEDULED)) {
+            scheduledAuctionsQueue.offer(new AuctionTimeEntry(auctionId, auctionTime));
+            scheduleNextActivation();
         }
     }
 
     private void scheduleNextActivation() {
-        AuctionTimeEntry nextActivation = scheduledAuctionsQueue.peek();
-        if (nextActivation != null) {
-            long delay = LocalDateTime.now().until(nextActivation.actionTime, java.time.temporal.ChronoUnit.MILLIS);
-            scheduledAuctionsExecutor.schedule(this::processNextActivation, delay, TimeUnit.MILLISECONDS);
+        scheduledAuctionsExecutor.shutdown();
+        scheduledAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
+
+        AuctionTimeEntry nextActivating = scheduledAuctionsQueue.peek();
+        if (nextActivating != null) {
+            long delay = java.time.Duration.between(LocalDateTime.now(), nextActivating.getActionTime()).toMillis();
+            scheduledAuctionsExecutor.schedule(this:: processNextActivation, delay, TimeUnit.MILLISECONDS);
         }
     }
 
     private void scheduleNextClosing() {
+        activeAuctionsExecutor.shutdown();
+        activeAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
+
         AuctionTimeEntry nextClosing = activeAuctionsQueue.peek();
         if (nextClosing != null) {
-            long delay = LocalDateTime.now().until(nextClosing.actionTime, java.time.temporal.ChronoUnit.MILLIS);
+            long delay = java.time.Duration.between(LocalDateTime.now(), nextClosing.getActionTime()).toMillis();
             activeAuctionsExecutor.schedule(this::processNextClosing, delay, TimeUnit.MILLISECONDS);
         }
     }
 
     private void processNextActivation() {
+        LocalDateTime now = LocalDateTime.now();
         AuctionTimeEntry entry = scheduledAuctionsQueue.poll();
+
         if (entry != null) {
-            Auction auction = auctionRepository.findById(entry.auctionId).orElse(null);
-            if (auction != null && auction.getAuctionStatus() == AuctionStatus.SCHEDULED) {
-                activateAuction(auction);
-                activeAuctionsQueue.offer(new AuctionTimeEntry(auction.getAuctionId(), auction.getEndTime()));
-                scheduleNextClosing();
+            if (entry.getActionTime().isAfter(now)) {
+                scheduledAuctionsQueue.offer(entry);
+            } else {
+                Auction auction = auctionRepository.findById(entry.auctionId).orElse(null);
+                if (auction != null && auction.getAuctionStatus() == AuctionStatus.SCHEDULED) {
+                    activateAuction(auction);
+                    activeAuctionsQueue.offer(new AuctionTimeEntry(auction.getAuctionId(), auction.getEndTime()));
+                    scheduleNextClosing();
+                }
             }
         }
         scheduleNextActivation();
     }
 
     private void processNextClosing() {
+        LocalDateTime now = LocalDateTime.now();
         AuctionTimeEntry entry = activeAuctionsQueue.poll();
+
         if (entry != null) {
-            Auction auction = auctionRepository.findById(entry.auctionId).orElse(null);
-            if (auction != null && auction.getAuctionStatus() == AuctionStatus.ACTIVE) {
-                closeAuction(auction);
+            if (entry.getActionTime().isAfter(now)) {
+                activeAuctionsQueue.offer(entry);
+            } else {
+                Auction auction = auctionRepository.findById(entry.auctionId).orElse(null);
+                if (auction != null && auction.getAuctionStatus() == AuctionStatus.ACTIVE) {
+                    closeAuction(auction);
+                }
             }
         }
         scheduleNextClosing();
@@ -141,9 +144,7 @@ public class AuctionManagement {
 
     private void closeAuction(Auction auction) {
         auction.setAuctionStatus(AuctionStatus.CLOSED);
-
         Bid winningBid = bidRepository.findHighestBidForAuction(auction);
-
         if (winningBid != null) {
             auction.setWinner(winningBid.getCustomer());
             auction.setWinningBid(winningBid);
@@ -155,19 +156,10 @@ public class AuctionManagement {
         log.info("Closed auction: {}", auction.getAuctionId());
     }
 
-    private static NotificationRequest getNotificationRequest(Auction auction) {
-        NotificationRequest notificationRequest = new NotificationRequest();
-        notificationRequest.setNotificationType(NotificationType.EMAIL);
-        notificationRequest.setRecipientEmail(auction.getWinner().getUser().getEmail());
-        notificationRequest.setSubject("You have successfully won the auction: " + auction.getAuctionId());
-        notificationRequest.setContent("Please contact vendor with given auctionId and product: " + auction.getProduct().getProductName());
-        return notificationRequest;
-    }
-
+    @Getter
     private static class AuctionTimeEntry {
         String auctionId;
         LocalDateTime actionTime;
-
         AuctionTimeEntry(String auctionId, LocalDateTime actionTime) {
             this.auctionId = auctionId;
             this.actionTime = actionTime;
