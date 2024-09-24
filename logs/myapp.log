@@ -7530,3 +7530,250 @@ java.lang.Exception: Invalid start and end auction time.
 2024-09-24 21:39:22 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
 2024-09-24 21:39:22 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
 2024-09-24 21:39:22 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:40:15 - trace:   INFO - LocalDateTime: 2024-09-24T21:40:15.366623 Processing notification queue. Current size: 0
+2024-09-24 21:41:15 - trace:   INFO - LocalDateTime: 2024-09-24T21:41:15.374611 Processing notification queue. Current size: 0
+2024-09-24 21:42:15 - trace:   INFO - LocalDateTime: 2024-09-24T21:42:15.370216 Processing notification queue. Current size: 0
+2024-09-24 21:43:15 - trace:   INFO - LocalDateTime: 2024-09-24T21:43:15.375404 Processing notification queue. Current size: 0
+2024-09-24 21:44:15 - trace:   INFO - LocalDateTime: 2024-09-24T21:44:15.371323 Processing notification queue. Current size: 0
+2024-09-24 21:44:37 - trace:   INFO - Starting ServiceApplication using Java 17.0.12 with PID 56368 (/Users/mayankkumar/intuit/Bidding-System/build/classes/java/main started by mayankkumar in /Users/mayankkumar/intuit/Bidding-System)
+2024-09-24 21:44:37 - trace:   INFO - No active profile set, falling back to 1 default profile: "default"
+2024-09-24 21:44:37 - trace:   INFO - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-09-24 21:44:37 - trace:   INFO - Finished Spring Data repository scanning in 64 ms. Found 5 JPA repository interfaces.
+2024-09-24 21:44:38 - trace:   INFO - Tomcat initialized with port 8080 (http)
+2024-09-24 21:44:38 - trace:   INFO - Initializing ProtocolHandler ["http-nio-8080"]
+2024-09-24 21:44:38 - trace:   INFO - Starting service [Tomcat]
+2024-09-24 21:44:38 - trace:   INFO - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2024-09-24 21:44:38 - trace:   INFO - Initializing Spring embedded WebApplicationContext
+2024-09-24 21:44:38 - trace:   INFO - Root WebApplicationContext: initialization completed in 912 ms
+2024-09-24 21:44:38 - trace:   INFO - HikariPool-1 - Starting...
+2024-09-24 21:44:38 - trace:   INFO - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2024-09-24 21:44:38 - trace:   INFO - HikariPool-1 - Start completed.
+2024-09-24 21:44:38 - trace:   INFO - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2024-09-24 21:44:38 - trace:   INFO - No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-09-24 21:44:39 - trace:   INFO - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-09-24 21:44:39 - trace:   INFO - Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-09-24 21:44:39 - trace:   WARN - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2024-09-24 21:44:39 - trace:   INFO - Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-09-24 21:44:39 - trace:   WARN - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-09-24 21:44:40 - trace:   DEBUG - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, LogoutFilter, JwtAuthFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2024-09-24 21:44:40 - trace:   INFO - Starting ProtocolHandler ["http-nio-8080"]
+2024-09-24 21:44:40 - trace:   INFO - Tomcat started on port 8080 (http) with context path '/'
+2024-09-24 21:44:40 - trace:   INFO - Started ServiceApplication in 3.382 seconds (process running for 3.627)
+2024-09-24 21:44:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:44:40.252031 Processing notification queue. Current size: 0
+2024-09-24 21:44:46 - trace:   INFO - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-09-24 21:44:46 - trace:   INFO - Initializing Servlet 'dispatcherServlet'
+2024-09-24 21:44:46 - trace:   INFO - Completed initialization in 1 ms
+2024-09-24 21:44:46 - trace:   DEBUG - Securing POST /api/v1/bidding-system/account/register
+2024-09-24 21:44:46 - trace:   DEBUG - Set SecurityContextHolder to anonymous SecurityContext
+2024-09-24 21:44:46 - trace:   DEBUG - Secured POST /api/v1/bidding-system/account/register
+2024-09-24 21:44:49 - trace:   DEBUG - Securing POST /api/v1/bidding-system/account/login
+2024-09-24 21:44:49 - trace:   DEBUG - Set SecurityContextHolder to anonymous SecurityContext
+2024-09-24 21:44:49 - trace:   DEBUG - Secured POST /api/v1/bidding-system/account/login
+2024-09-24 21:44:49 - trace:   DEBUG - Authenticated user
+2024-09-24 21:45:01 - trace:   DEBUG - Securing POST /api/v1/bidding-system/auction
+2024-09-24 21:45:01 - trace:   DEBUG - Secured POST /api/v1/bidding-system/auction
+2024-09-24 21:45:01 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:01 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:01 - trace:   ERROR - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.Exception: Something went wrong: ] with root cause
+java.lang.Exception: Invalid start and end auction time.
+	at com.intuit.auction.service.services.impl.AuctionServiceImpl.createAuction(AuctionServiceImpl.java:58)
+	at com.intuit.auction.service.controller.AuctionController.createAuction(AuctionController.java:44)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:355)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.proceed(AuthorizationManagerBeforeMethodInterceptor.java:269)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.attemptAuthorization(AuthorizationManagerBeforeMethodInterceptor.java:264)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.invoke(AuthorizationManagerBeforeMethodInterceptor.java:197)
+	at org.springframework.security.config.annotation.method.configuration.DeferringMethodInterceptor.invoke(DeferringMethodInterceptor.java:44)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:768)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:720)
+	at com.intuit.auction.service.controller.AuctionController$$SpringCGLIB$$0.createAuction(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.intuit.auction.service.authentication.jwt.JwtAuthFilter.doFilterInternal(JwtAuthFilter.java:52)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2024-09-24 21:45:01 - trace:   DEBUG - Securing POST /error
+2024-09-24 21:45:01 - trace:   DEBUG - Set SecurityContextHolder to anonymous SecurityContext
+2024-09-24 21:45:01 - trace:   DEBUG - Pre-authenticated entry point called. Rejecting access
+2024-09-24 21:45:10 - trace:   DEBUG - Securing POST /api/v1/bidding-system/auction
+2024-09-24 21:45:10 - trace:   DEBUG - Secured POST /api/v1/bidding-system/auction
+2024-09-24 21:45:10 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:10 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:18 - trace:   DEBUG - Securing POST /api/v1/bidding-system/auction
+2024-09-24 21:45:18 - trace:   DEBUG - Secured POST /api/v1/bidding-system/auction
+2024-09-24 21:45:18 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:18 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:26 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:45:26 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:45:26 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:26 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:45:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:45:40.253782 Processing notification queue. Current size: 0
+2024-09-24 21:46:09 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:46:09 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:46:09 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:46:09 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:46:31 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:46:31 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:46:31 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:46:31 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:46:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:46:40.249803 Processing notification queue. Current size: 0
+2024-09-24 21:47:01 - trace:   INFO - Activated auction: e9b30251-ee45-433b-ac18-2def32b0f68f
+2024-09-24 21:47:03 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:47:03 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:47:03 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:47:03 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:47:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:47:40.255128 Processing notification queue. Current size: 0
+2024-09-24 21:48:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:48:40.255482 Processing notification queue. Current size: 0
+2024-09-24 21:49:02 - trace:   INFO - Closed auction: e9b30251-ee45-433b-ac18-2def32b0f68f
+2024-09-24 21:49:02 - trace:   INFO - Activated auction: 177aa7ff-b56e-4ad7-a342-cfdf851b839a
+2024-09-24 21:49:05 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:49:05 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:49:05 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:49:05 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:49:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:49:40.255370 Processing notification queue. Current size: 0
+2024-09-24 21:50:00 - trace:   INFO - Closed auction: 177aa7ff-b56e-4ad7-a342-cfdf851b839a
+2024-09-24 21:50:06 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:50:06 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:50:06 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:50:06 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:50:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:50:40.255755 Processing notification queue. Current size: 0
+2024-09-24 21:51:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:51:40.258929 Processing notification queue. Current size: 0
+2024-09-24 21:52:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:52:40.257390 Processing notification queue. Current size: 0
+2024-09-24 21:53:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:53:40.256453 Processing notification queue. Current size: 0
+2024-09-24 21:54:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:54:40.256921 Processing notification queue. Current size: 0
+2024-09-24 21:55:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:55:40.253246 Processing notification queue. Current size: 0
+2024-09-24 21:56:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:56:40.256609 Processing notification queue. Current size: 0
+2024-09-24 21:57:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:57:40.258030 Processing notification queue. Current size: 0
+2024-09-24 21:57:43 - trace:   DEBUG - Securing POST /api/v1/bidding-system/auction
+2024-09-24 21:57:43 - trace:   DEBUG - Secured POST /api/v1/bidding-system/auction
+2024-09-24 21:57:43 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:43 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:50 - trace:   DEBUG - Securing POST /api/v1/bidding-system/auction
+2024-09-24 21:57:50 - trace:   DEBUG - Secured POST /api/v1/bidding-system/auction
+2024-09-24 21:57:50 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:50 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:55 - trace:   DEBUG - Securing POST /api/v1/bidding-system/auction
+2024-09-24 21:57:55 - trace:   DEBUG - Secured POST /api/v1/bidding-system/auction
+2024-09-24 21:57:55 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:55 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.createAuction(java.security.Principal,com.intuit.auction.service.dto.AuctionRequest) throws java.lang.Exception; target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:59 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:57:59 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:57:59 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:57:59 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:58:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:58:40.257178 Processing notification queue. Current size: 0
+2024-09-24 21:59:00 - trace:   INFO - Closed auction: 3177fc73-070e-4fb7-8534-8f07b0ff45ac
+2024-09-24 21:59:05 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:59:05 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 21:59:05 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:59:05 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 21:59:40 - trace:   INFO - LocalDateTime: 2024-09-24T21:59:40.255637 Processing notification queue. Current size: 0
+2024-09-24 22:00:00 - trace:   INFO - Closed auction: 9a61935f-7306-4a85-9107-4cc6a04c8aec
+2024-09-24 22:00:40 - trace:   INFO - LocalDateTime: 2024-09-24T22:00:40.259239 Processing notification queue. Current size: 0
+2024-09-24 22:01:40 - trace:   INFO - LocalDateTime: 2024-09-24T22:01:40.261182 Processing notification queue. Current size: 0
+2024-09-24 22:02:01 - trace:   INFO - Closed auction: 17353aae-d022-4fd3-a244-7f4b95bad520
+2024-09-24 22:02:06 - trace:   DEBUG - Securing GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 22:02:06 - trace:   DEBUG - Secured GET /api/v1/bidding-system/auction?categories=ELECTRONIC&auctionStatus=ACTIVE
+2024-09-24 22:02:06 - trace:   DEBUG - Authorizing method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]
+2024-09-24 22:02:06 - trace:   DEBUG - Authorized method invocation ReflectiveMethodInvocation: public org.springframework.http.ResponseEntity com.intuit.auction.service.controller.AuctionController.searchAuction(java.util.List,java.util.List); target is of class [com.intuit.auction.service.controller.AuctionController]

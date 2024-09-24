@@ -79,8 +79,8 @@ public class AuctionManagement {
     }
 
     private void scheduleNextActivation() {
-        scheduledAuctionsExecutor.shutdown();
-        scheduledAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
+        //scheduledAuctionsExecutor.shutdown();
+        //scheduledAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
 
         AuctionTimeEntry nextActivating = scheduledAuctionsQueue.peek();
         if (nextActivating != null) {
@@ -90,8 +90,8 @@ public class AuctionManagement {
     }
 
     private void scheduleNextClosing() {
-        activeAuctionsExecutor.shutdown();
-        activeAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
+        //activeAuctionsExecutor.shutdown();
+        //activeAuctionsExecutor = Executors.newSingleThreadScheduledExecutor();
 
         AuctionTimeEntry nextClosing = activeAuctionsQueue.peek();
         if (nextClosing != null) {
