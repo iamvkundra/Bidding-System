@@ -1,6 +1,7 @@
 package com.intuit.auction.service.services.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,10 @@ import com.intuit.auction.service.dto.AuctionRequest;
 import com.intuit.auction.service.entity.account.Customer;
 import com.intuit.auction.service.entity.account.Vendor;
 import com.intuit.auction.service.enums.AuctionStatus;
+import com.intuit.auction.service.exceptions.AccessDeniedException;
+import com.intuit.auction.service.exceptions.AccountException;
+import com.intuit.auction.service.exceptions.AlreadyRegisteredException;
+import com.intuit.auction.service.exceptions.BadRequestException;
 import com.intuit.auction.service.jobs.AuctionManagement;
 import com.intuit.auction.service.repositories.AuctionRegistrationRepository;
 import com.intuit.auction.service.repositories.AuctionRepository;
@@ -37,7 +42,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Autowired
     public AuctionServiceImpl(AccountService auctionService, AuctionRepository auctionRepository,
                               ProductRepository productRepository, AuctionRegistrationRepository
-                                          auctionRegistrationRepository, AuctionManagement auctionManagement) {
+                                      auctionRegistrationRepository, AuctionManagement auctionManagement) {
         this.accountService = auctionService;
         this.auctionRepository = auctionRepository;
         this.productRepository = productRepository;
@@ -55,7 +60,7 @@ public class AuctionServiceImpl implements AuctionService {
             if (auction.getEndTime().isBefore(LocalDateTime.now()) ||
                     auction.getEndTime().isBefore(auction.getStartTime()) ||
                     auction.getEndTime() == auction.getStartTime()) {
-                throw new Exception("Invalid start and end auction time.");
+                throw new BadRequestException("Invalid start and end auction time.");
             }
 
             if (LocalDateTime.now().isAfter(auction.getStartTime()) && LocalDateTime.now().isBefore(auction.getEndTime())) {
@@ -69,12 +74,13 @@ public class AuctionServiceImpl implements AuctionService {
 
             if (auction.getAuctionStatus().equals(AuctionStatus.ACTIVE)) {
                 auctionManagement.addAuction(auction.getAuctionId(), auction.getEndTime(), auction.getAuctionStatus());
-            }else {
+            } else {
                 auctionManagement.addAuction(auction.getAuctionId(), auction.getStartTime(), auction.getAuctionStatus());
             }
-
-        } catch (Exception exception) {
-            throw new Exception("Something went wrong: ", exception);
+        } catch (BadRequestException exception) {
+            throw new BadRequestException(exception.getMessage(), exception);
+        } catch (RuntimeException exception) {
+            throw new RuntimeException("Something went wrong: ", exception);
         }
     }
 
@@ -85,8 +91,8 @@ public class AuctionServiceImpl implements AuctionService {
 
         if (checkIfVendorIsCorrectForGivenAuction) {
             auctionRepository.updateAuctionStatusByAuctionId(AuctionStatus.CLOSED, auctionId);
-        }else {
-            throw new Exception("Not a Vendor who created the auction.");
+        } else {
+            throw new AccessDeniedException("Not a Vendor who created the auction.");
         }
     }
 
@@ -98,15 +104,24 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionResponseDto> searchAuction(AuctionFilter filter) {
-        return auctionRepository.findByProductCategoryInAndAuctionStatusIn(
-                filter.getProductCategory(),
-                filter.getAuctionStatuses()
-        ).stream().map(this::createAuctionResponseId).toList();
+        try {
+            if (filter.getAuctionStatuses() == null && filter.getProductCategory() == null ||
+                    filter.getAuctionStatuses().isEmpty() && filter.getProductCategory().isEmpty()) {
+                return auctionRepository.findAll().stream().map(this::createAuctionResponseId).toList();
+            }
+            return auctionRepository.findByProductCategoryInAndAuctionStatusIn(
+                    filter.getProductCategory(),
+                    filter.getAuctionStatuses()
+            ).stream().map(this::createAuctionResponseId).toList();
+        } catch (Exception exception) {
+            log.error("Something went wrong with searching auction: {}", exception.getMessage());
+        }
+        return null;
     }
 
     @Override
     public Auction getAuctionDetails(String auctionId) {
-        Optional<Auction> auction =  auctionRepository.findById(auctionId);
+        Optional<Auction> auction = auctionRepository.findById(auctionId);
         return auction.orElse(null);
     }
 
@@ -121,11 +136,13 @@ public class AuctionServiceImpl implements AuctionService {
                     .existsByCustomerUsernameAndAuctionId((Customer) account, auction.get());
 
             if (checkAlreadyRegistered) {
-                throw new Exception("This account is already registered for auction: " + auctionId);
+                throw new AlreadyRegisteredException("This account is already registered for auction: " + auctionId);
             }
             auctionRegistrationRepository.save(new AuctionRegistration((Customer) account, auction.get()));
             log.info("Username: {} Successfully Registered for auctionId: {}", account.getUsername(),
                     auctionId);
+        } catch (AlreadyRegisteredException exception) {
+            throw new AlreadyRegisteredException("This user is already registered");
         } catch (Exception e) {
             log.error("Something went wrong while registering user for auction", e.getCause());
             throw new Exception(e);
@@ -142,6 +159,17 @@ public class AuctionServiceImpl implements AuctionService {
             throw new Exception("Invalid Auction Id");
         }
         return auctionRegistrationRepository.existsByCustomerUsernameAndAuctionId((Customer) account, auction.get());
+    }
+
+    @Override
+    public List<AuctionResponseDto> getAuctionsOfUser(String username) {
+
+        List<Auction> auction = auctionRegistrationRepository.findAuctionsByUsername(username);
+        List<AuctionResponseDto> result = new ArrayList<>();
+        for (Auction a : auction) {
+            result.add(createAuctionResponseId(a));
+        }
+        return result;
     }
 
     private AuctionResponseDto createAuctionResponseId(Auction auction) {

@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificationManager {
 
-    private static final int MAX_RETRY_ATTEMPTS = 3;
+    public static final int MAX_RETRY_ATTEMPTS = 3;
 
     private static final Logger log = LoggerFactory.getLogger(NotificationManager.class);
     private final Map<NotificationType, NotificationService> notificationServices;
-    private final ConcurrentLinkedQueue<NotificationRequest> notificationQueue = new ConcurrentLinkedQueue<>();
+    public final ConcurrentLinkedQueue<NotificationRequest> notificationQueue = new ConcurrentLinkedQueue<>();
 
     public NotificationManager() {
         notificationServices = new HashMap<>();

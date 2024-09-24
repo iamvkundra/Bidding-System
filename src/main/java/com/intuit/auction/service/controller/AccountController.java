@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,25 +51,25 @@ public class AccountController {
     @Operation(summary = "Get an account details",
             description = "Get an account details by username of account")
     @PreAuthorize("isAuthenticated() and (hasAuthority('VENDOR') or hasAuthority('CUSTOMER'))")
-    public ResponseEntity<AccountResponseDto> getUserByUsername(Principal principal) {
+    public ResponseEntity<?> getUserByUsername(Principal principal) {
         try {
             return new ResponseEntity<>(accountService.getUserByUsername(principal.getName()), HttpStatus.OK);
         } catch (Exception exception) {
-            throw new AccountException("Failed to get account details: " + exception.getMessage(), exception);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/login")
     @Operation(summary = "Login API",
             description = "login to the application using username and password")
-    public ResponseEntity<LoginResponseDto> authenticateAndGetToken(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody LoginRequest loginRequest) {
         try {
             LoginResponseDto loginResponseDto = accountService.login(loginRequest);
             return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
-        }catch (AuthenticationException exception) {
-            throw new AccountException("Invalid username or password: " + exception.getMessage(), exception);
-        } catch (Exception exception) {
-            throw new AccountException("Login Failed: " + exception.getMessage(), exception);
+        }catch (UsernameNotFoundException | AuthenticationException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (AccountException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

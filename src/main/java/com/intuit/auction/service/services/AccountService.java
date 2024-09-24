@@ -18,6 +18,8 @@ import com.intuit.auction.service.entity.account.User;
 import com.intuit.auction.service.enums.AccountType;
 import com.intuit.auction.service.exceptions.AccountException;
 import com.intuit.auction.service.repositories.AccountRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
 
+    private static final Logger log = LoggerFactory.getLogger(AccountService.class);
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -66,8 +69,9 @@ public class AccountService {
             accountRepository.save(account);
             return createAccountResponse(account);
         } catch (DataIntegrityViolationException exception) {
-            throw new AccountException("username-email exist: "+ exception.getMessage(), exception);
+            throw new AccountException("User already available");
         } catch (Exception ex) {
+            log.error("Failed while creating account: {}", ex.getMessage());
             throw new AccountException("Failed to create account: " + ex.getMessage(), ex);
         }
     }
@@ -76,8 +80,6 @@ public class AccountService {
         try {
             Optional<Account> account = accountRepository.findById(username);
             return createAccountResponse(account.get());
-        } catch (AccountException exception) {
-            throw new AccountException("Failed to get Account Details: "+ exception.getMessage(), exception);
         } catch (Exception exception) {
             throw new AccountException("Something went wrong" + exception.getMessage(), exception);
         }
@@ -125,8 +127,6 @@ public class AccountService {
                 throw new UsernameNotFoundException("Invalid user request!");
             }
             return loginResponseDto;
-        } catch (AccountException accountException) {
-            throw new AccountException("Error while login: "+accountException.getMessage(), accountException);
         } catch (Exception exception) {
             throw new AccountException("Something went wrong: "+ exception.getMessage(), exception);
         }

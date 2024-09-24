@@ -16,4 +16,6 @@ public interface AuctionRegistrationRepository extends JpaRepository<AuctionRegi
     @Query("SELECT CASE WHEN COUNT(ar) > 0 THEN true ELSE false END FROM AuctionRegistration ar WHERE ar.customerUsername = :customerUsername AND ar.auctionId = :auctionId")
     boolean existsByCustomerUsernameAndAuctionId(@Param("customerUsername") Customer customer, @Param("auctionId")
     Auction auctionId);
+    @Query("SELECT ar.auctionId FROM AuctionRegistration ar WHERE ar.customerUsername.username = :username")
+    List<Auction> findAuctionsByUsername(@Param("username") String username);
 }

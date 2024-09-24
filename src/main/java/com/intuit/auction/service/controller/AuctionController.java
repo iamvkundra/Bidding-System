@@ -12,6 +12,9 @@ import com.intuit.auction.service.dto.AuctionRequest;
 import com.intuit.auction.service.dto.AuctionResponseDto;
 import com.intuit.auction.service.enums.AuctionStatus;
 import com.intuit.auction.service.enums.ProductCategory;
+import com.intuit.auction.service.exceptions.AccessDeniedException;
+import com.intuit.auction.service.exceptions.AlreadyRegisteredException;
+import com.intuit.auction.service.exceptions.BadRequestException;
 import com.intuit.auction.service.services.AuctionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,9 +44,15 @@ public class AuctionController {
             description = "Auction will be only created by vendor")
     @PreAuthorize("isAuthenticated() and hasAuthority('VENDOR')")
     public ResponseEntity<?> createAuction(Principal principal,
-                                           @RequestBody AuctionRequest auctionRequest) throws Exception {
-        auctionService.createAuction(principal.getName(), auctionRequest);
-        return ResponseEntity.ok("Auction Created");
+                                           @RequestBody AuctionRequest auctionRequest) {
+        try {
+            auctionService.createAuction(principal.getName(), auctionRequest);
+            return ResponseEntity.ok("Auction Created");
+        } catch (BadRequestException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/register")
@@ -52,30 +62,46 @@ public class AuctionController {
     public ResponseEntity<?> registerCustomerForAuction(Principal principal,
                                                         @RequestBody @Valid AuctionRegistrationDto
                                                                     auctionRegistration) throws Exception {
-        auctionService.registerUserForAuction(principal.getName(), auctionRegistration.getAuctionId());
-        return ResponseEntity.ok("user successfully registered for auction.");
+        try {
+            auctionService.registerUserForAuction(principal.getName(), auctionRegistration.getAuctionId());
+            return ResponseEntity.ok("user successfully registered for auction.");
+        } catch (AlreadyRegisteredException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @DeleteMapping
+    @PutMapping
     @Operation(summary = "Close auction",
             description = "Auction will be closed by same vendor.")
     @PreAuthorize("isAuthenticated() and hasAuthority('VENDOR')")
-    public ResponseEntity<?> closeAuction(Principal principal, @PathVariable("auctionId") String auctionId) throws Exception {
-        auctionService.closeAuction(principal.getName(), auctionId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> closeAuction(Principal principal, @PathVariable("auctionId") String auctionId) {
+        try {
+            auctionService.closeAuction(principal.getName(), auctionId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (AccessDeniedException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
+        }catch (Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping
     @Operation(summary = "Search Auction",
             description = "Search auction based on filters")
     @PreAuthorize("isAuthenticated() and (hasAuthority('CUSTOMER') or hasAuthority('VENDOR'))")
-    public ResponseEntity<List<AuctionResponseDto>> searchAuction(@RequestParam(name = "categories", required = false)
+    public ResponseEntity<?> searchAuction(@RequestParam(name = "categories", required = false)
                                                            List<ProductCategory> productCategories,
                                                                   @RequestParam(name = "auctionStatus", required = false)
                                                        List<AuctionStatus> auctionStatuses) {
-        AuctionFilter auctionFilter = new AuctionFilter(productCategories, auctionStatuses);
-        List<AuctionResponseDto> auctions = auctionService.searchAuction(auctionFilter);
-        return ResponseEntity.ok(auctions);
+        try {
+            AuctionFilter auctionFilter = new AuctionFilter(productCategories, auctionStatuses);
+            List<AuctionResponseDto> auctions = auctionService.searchAuction(auctionFilter);
+            return ResponseEntity.ok(auctions);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{auctionId}")
@@ -84,5 +110,12 @@ public class AuctionController {
     @PreAuthorize("isAuthenticated() and (hasAuthority('CUSTOMER') or hasAuthority('VENDOR'))")
     public ResponseEntity<AuctionResponseDto> getAuctionById(@PathVariable(name = "auctionId") String auctionId) {
         return new ResponseEntity<>(auctionService.getAuctionById(auctionId), HttpStatus.OK);
+    }
+    @GetMapping("customer/{username}")
+    @Operation(summary = "Get an auctions list participated By User",
+            description = "Get an auctions list participated By User")
+    @PreAuthorize("isAuthenticated() and hasAuthority('CUSTOMER')")
+    public ResponseEntity<List<AuctionResponseDto>> getAuctionListByUsername(Principal principal) {
+        return new ResponseEntity<>(auctionService.getAuctionsOfUser(principal.getName()), HttpStatus.OK);
     }
 }

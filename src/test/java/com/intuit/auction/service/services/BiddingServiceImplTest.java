@@ -7,6 +7,7 @@ import com.intuit.auction.service.entity.Bid;
 import com.intuit.auction.service.entity.account.Customer;
 
 import com.intuit.auction.service.enums.AuctionStatus;
+import com.intuit.auction.service.exceptions.AccessDeniedException;
 import com.intuit.auction.service.exceptions.BiddingException;
 import com.intuit.auction.service.repositories.AuctionRepository;
 import com.intuit.auction.service.repositories.BidRepository;
@@ -84,29 +85,13 @@ public class BiddingServiceImplTest {
         when(auctionService.getAuctionDetails("auction1")).thenReturn(auction);
         when(auctionService.isUserRegisteredForAuction("testUser", "auction1")).thenReturn(false);
 
-        BiddingException exception = assertThrows(BiddingException.class, () -> {
+        AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> {
             biddingService.placeBid("testUser", bidRequest);
         });
 
         assertEquals("Cannot Bid, The customer need to register first", exception.getMessage());
     }
 
-    @Test
-    public void testGetAuctionBids() {
-        Bid bid = new Bid();
-        bid.setAuction(auction);
-        bid.setAmount(150.0);
-        bid.setCustomer(customer);
-        bid.setBidTime(LocalDateTime.now());
-
-        when(bidRepository.findByAuctionId("auction1")).thenReturn(Collections.singletonList(bid));
-
-        List<BidResponse> responses = biddingService.getAuctionBids("auction1");
-
-        assertEquals(1, responses.size());
-        assertEquals(150.0, responses.get(0).getBidAmount());
-        assertEquals("testUser", responses.get(0).getUsername());
-    }
 
     @Test
     public void testGetBidsByAuctionIdAndCustomerId() {

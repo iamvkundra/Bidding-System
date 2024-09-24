@@ -7,6 +7,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.3'
 	id 'io.spring.dependency-management' version '1.1.6'
+	//id 'checkstyle'
 }
 
 allprojects {
@@ -75,6 +76,20 @@ dependencies {
 //		xml.enabled false
 //		csv.enabled false
 //		html.destination file("${buildDir}/jacocoHtml")
+//	}
+//}
+//checkstyle {
+//	config = resources.text.fromFile('config/checkstyle/checkstyle.xml')
+//	toolVersion "8.17"
+//}
+//
+//
+//
+//tasks.withType(Checkstyle) {
+//	reports {
+//		xml.required = false  // Disable the XML report if not needed
+//		html.required = true  // Enable the HTML report for easier viewing
+//		html.destination = file("$buildDir/reports/checkstyle/checkstyle.html")
 //	}
 //}
 

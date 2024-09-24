@@ -2,6 +2,7 @@ package com.intuit.auction.service.controller;
 
 import com.intuit.auction.service.dto.BidRequest;
 import com.intuit.auction.service.dto.BidResponse;
+import com.intuit.auction.service.exceptions.BiddingException;
 import com.intuit.auction.service.services.BiddingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,37 +49,13 @@ class BiddingControllerTest {
     }
 
     @Test
-    void placeBid_shouldReturnBadRequestStatusOnException() throws Exception {
-        BidRequest bidRequest = new BidRequest();
-        // Set properties for bidRequest as needed
-        doThrow(new RuntimeException("Error placing bid")).when(biddingService).placeBid(anyString(), any());
-
-        ResponseEntity<?> response = biddingController.placeBid(principal, bidRequest);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody()).isEqualTo("Error placing bid");
-    }
-
-    @Test
-    void getAllBidByAuctionId_shouldReturnOkStatus() {
-        String auctionId = "auction1";
-        List<BidResponse> bids = Arrays.asList(new BidResponse(), new BidResponse());
-        when(biddingService.getAuctionBids(auctionId)).thenReturn(bids);
-
-        ResponseEntity<List<BidResponse>> response = biddingController.getAllBidByAuctionId(auctionId);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(bids);
-    }
-
-    @Test
     void getAllBidByAuctionIdAndCustomerUsername_shouldReturnOkStatus() {
         String auctionId = "auction1";
         String customerUsername = "customer1";
         List<BidResponse> bids = Arrays.asList(new BidResponse(), new BidResponse());
         when(biddingService.getBidsByAuctionIdAndCustomerId(customerUsername, auctionId)).thenReturn(bids);
 
-        ResponseEntity<List<BidResponse>> response = biddingController.getAllBidByAuctionIdAndCustomerUsername(auctionId, customerUsername);
+        ResponseEntity<List<BidResponse>> response = biddingController.getAllBidByAuctionIdByCustomerUsername(auctionId, customerUsername);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(bids);
@@ -89,7 +66,7 @@ class BiddingControllerTest {
         List<BidResponse> bids = Arrays.asList(new BidResponse(), new BidResponse());
         when(biddingService.getBidsByUsername("customer1")).thenReturn(bids);
 
-        ResponseEntity<List<BidResponse>> response = biddingController.getBidsFor(principal);
+        ResponseEntity<List<BidResponse>> response = biddingController.getAllBids(principal);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(bids);

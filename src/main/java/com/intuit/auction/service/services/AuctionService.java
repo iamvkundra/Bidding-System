@@ -6,6 +6,7 @@ import com.intuit.auction.service.dto.AuctionFilter;
 import com.intuit.auction.service.dto.AuctionRequest;
 import com.intuit.auction.service.dto.AuctionResponseDto;
 import com.intuit.auction.service.entity.Auction;
+import org.springframework.http.HttpStatusCode;
 
 public interface AuctionService {
 
@@ -17,4 +18,6 @@ public interface AuctionService {
     Auction getAuctionDetails(String auctionId);
     void registerUserForAuction(String username, String auctionId) throws Exception;
     boolean isUserRegisteredForAuction(String customerId, String auctionId) throws Exception;
+
+    List<AuctionResponseDto> getAuctionsOfUser(String name);
 }

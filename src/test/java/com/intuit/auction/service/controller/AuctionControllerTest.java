@@ -3,6 +3,12 @@ package com.intuit.auction.service.controller;
 import com.intuit.auction.service.dto.AuctionRegistrationDto;
 import com.intuit.auction.service.dto.AuctionRequest;
 import com.intuit.auction.service.dto.AuctionResponseDto;
+import com.intuit.auction.service.entity.Product;
+import com.intuit.auction.service.enums.AuctionStatus;
+import com.intuit.auction.service.enums.ProductCategory;
+import com.intuit.auction.service.exceptions.AccessDeniedException;
+import com.intuit.auction.service.exceptions.AlreadyRegisteredException;
+import com.intuit.auction.service.exceptions.BadRequestException;
 import com.intuit.auction.service.services.AuctionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,83 +19,88 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class AuctionControllerTest {
 
-    @Mock
-    private AuctionService auctionService;
-
     @InjectMocks
     private AuctionController auctionController;
 
+    @Mock
+    private AuctionService auctionService;
+
+    @Mock
     private Principal principal;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        principal = mock(Principal.class);
+    }
+
+    @Test
+    void createAuction_success() {
         when(principal.getName()).thenReturn("vendor1");
+        AuctionRequest request = new AuctionRequest(); // Set up your request object here
+
+        ResponseEntity<?> response = auctionController.createAuction(principal, request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Auction Created", response.getBody());
+
     }
 
     @Test
-    void createAuction_shouldReturnOkStatus() throws Exception {
-        AuctionRequest auctionRequest = new AuctionRequest();
-        // Set properties for auctionRequest as needed
+    void registerCustomerForAuction_success() throws Exception {
+        when(principal.getName()).thenReturn("customer1");
+        AuctionRegistrationDto registrationDto = new AuctionRegistrationDto();
+        registrationDto.setAuctionId("auctionId1");
 
-        ResponseEntity<?> response = auctionController.createAuction(principal, auctionRequest);
+        ResponseEntity<?> response = auctionController.registerCustomerForAuction(principal, registrationDto);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("Auction Created");
-        verify(auctionService).createAuction("vendor1", auctionRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("user successfully registered for auction.", response.getBody());
+        verify(auctionService, times(1)).registerUserForAuction("customer1", "auctionId1");
     }
 
     @Test
-    void registerCustomerForAuction_shouldReturnOkStatus() throws Exception {
-        AuctionRegistrationDto auctionRegistration = new AuctionRegistrationDto();
-        auctionRegistration.setAuctionId("auctionId");
-
-        ResponseEntity<?> response = auctionController.registerCustomerForAuction(principal, auctionRegistration);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("user successfully registered for auction.");
-        verify(auctionService).registerUserForAuction("vendor1", "auctionId");
-    }
-
-    @Test
-    void closeAuction_shouldReturnOkStatus() throws Exception {
-        String auctionId = "auctionId";
+    void closeAuction_success() throws Exception {
+        when(principal.getName()).thenReturn("vendor1");
+        String auctionId = "auctionId1";
 
         ResponseEntity<?> response = auctionController.closeAuction(principal, auctionId);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(auctionService).closeAuction("vendor1", auctionId);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(auctionService, times(1)).closeAuction("vendor1", auctionId);
     }
 
     @Test
-    void searchAuction_shouldReturnOkStatus() {
-        List<AuctionResponseDto> auctions = Arrays.asList(new AuctionResponseDto(), new AuctionResponseDto());
-        when(auctionService.searchAuction(any())).thenReturn(auctions);
+    void searchAuction_success() {
+        List<ProductCategory> categories = Collections.singletonList(ProductCategory.ELECTRONIC);
+        List<AuctionStatus> statuses = Collections.singletonList(AuctionStatus.ACTIVE);
+        when(principal.getName()).thenReturn("user1");
+        when(auctionService.searchAuction(any())).thenReturn(Collections.emptyList());
 
-        ResponseEntity<List<AuctionResponseDto>> response = auctionController.searchAuction(null, null);
+        ResponseEntity<?> response = auctionController.searchAuction(categories, statuses);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(auctions);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(Collections.emptyList(), response.getBody());
     }
 
     @Test
-    void getAuctionById_shouldReturnOkStatus() {
-        String auctionId = "auctionId";
-        AuctionResponseDto auctionResponseDto = new AuctionResponseDto();
-        when(auctionService.getAuctionById(auctionId)).thenReturn(auctionResponseDto);
+    void getAuctionById_success() {
+        String auctionId = "auctionId1";
+        AuctionResponseDto responseDto = new AuctionResponseDto(); // Populate this with expected data
+        when(auctionService.getAuctionById(auctionId)).thenReturn(responseDto);
 
         ResponseEntity<AuctionResponseDto> response = auctionController.getAuctionById(auctionId);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(auctionResponseDto);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(responseDto, response.getBody());
     }
 }

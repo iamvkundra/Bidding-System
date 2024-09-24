@@ -12,7 +12,7 @@ public class ExceptionHandler {
     }
 
     public ResponseEntity<String> handlerGenericException(Exception exception) {
-        return new ResponseEntity<>("Something went wrong. error: " + exception.getMessage(),
+        return new ResponseEntity<>(exception.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

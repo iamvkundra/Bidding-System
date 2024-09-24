@@ -3,7 +3,9 @@ package com.intuit.auction.service.services.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.intuit.auction.service.dto.AuctionResponseDto;
 import com.intuit.auction.service.dto.BidRequest;
 import com.intuit.auction.service.dto.BidResponse;
 import com.intuit.auction.service.entity.Auction;
@@ -12,6 +14,8 @@ import com.intuit.auction.service.entity.account.Account;
 import com.intuit.auction.service.entity.account.Customer;
 import com.intuit.auction.service.entity.account.Vendor;
 import com.intuit.auction.service.enums.AuctionStatus;
+import com.intuit.auction.service.exceptions.AccessDeniedException;
+import com.intuit.auction.service.exceptions.BadRequestException;
 import com.intuit.auction.service.exceptions.BiddingException;
 import com.intuit.auction.service.repositories.AuctionRepository;
 import com.intuit.auction.service.repositories.BidRepository;
@@ -55,9 +59,14 @@ public class BiddingServiceImpl implements BiddingService {
     }
 
     @Override
-    public List<BidResponse> getAuctionBids(String auctionId) {
-        List<Bid> bids =  bidRepository.findByAuctionId(auctionId);
-        return createBidResponse(bids);
+    public List<BidResponse> getAuctionBids(String auctionId) throws BiddingException {
+        try {
+            List<Bid> bids = bidRepository.findByAuctionId(auctionId);
+            return createBidResponse(bids);
+        } catch (Exception exception) {
+            throw new BiddingException("Something went wrong, Please also check auctionId");
+        }
+
     }
 
     @Override
@@ -72,17 +81,30 @@ public class BiddingServiceImpl implements BiddingService {
         return createBidResponse(bids);
     }
 
+    @Override
+    public BidResponse getWinningBid(String auctionId) throws BiddingException {
+        try {
+            Optional<Auction> auction = auctionRepository.findById(auctionId);
+            if (auction.isPresent() && auction.get().getWinningBid() != null) {
+                return createBid(auction.get().getWinningBid());
+            }
+        } catch (BiddingException exception) {
+            throw new BiddingException(exception.getMessage(), exception);
+        }
+        return null;
+    }
+
     private void validateBidding(Account customer, Auction auction, BidRequest bidRequest) throws Exception {
         if (!auction.getAuctionStatus().equals(AuctionStatus.ACTIVE)) {
-            throw new Exception("Cannot Bid into Scheduled or Closed Bid");
+            throw new BiddingException("Cannot Bid into Scheduled or Closed Bid");
         }
 
         if (!auctionService.isUserRegisteredForAuction(customer.getUsername(), auction.getAuctionId())) {
-            throw new BiddingException("Cannot Bid, The customer need to register first");
+            throw new AccessDeniedException("Cannot Bid, The customer need to register first");
         }
 
         if (auction.getAuctionBasePrice() > bidRequest.getBidAmount()) {
-            throw new BiddingException("Customer Bidding amount is less than auctionBaseAmount: " + auction.getAuctionBasePrice());
+            throw new BadRequestException("Customer Bidding amount is less than auctionBaseAmount: " + auction.getAuctionBasePrice());
         }
     }
 
@@ -99,6 +121,15 @@ public class BiddingServiceImpl implements BiddingService {
         return response;
     }
 
+    private BidResponse createBid(Bid bid) {
+        BidResponse bidResponse = new BidResponse();
+        bidResponse.setBidAmount(bid.getAmount());
+        bidResponse.setTimeOfBid(bid.getBidTime());
+        bidResponse.setUsername(bid.getCustomer().getUsername());
+        bidResponse.setBidId(bid.getBidId());
+        return bidResponse;
+
+    }
     private void updateAuctionWithNewBid(Auction auction, Bid newBid) {
         if (auction.getHighestBid() == null || auction.getHighestBid().getAmount() < newBid.getAmount()) {
             auction.setHighestBid(newBid);
