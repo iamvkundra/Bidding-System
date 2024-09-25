@@ -19,22 +19,20 @@ import lombok.Setter;
 @Table(name = "account")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "account_type", discriminatorType = DiscriminatorType.STRING)
+@Getter
 public class Account {
 
     public Account() {}
 
     @Id
-    @Getter
     @Setter
     private String username;
 
-    @Getter
     @Setter
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @Getter
     private User user;
 
     public Account(String username, String password, User user) {

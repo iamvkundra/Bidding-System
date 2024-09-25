@@ -1,18 +1,15 @@
 package com.intuit.auction.service.services.impl;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.intuit.auction.service.dto.AuctionResponseDto;
 import com.intuit.auction.service.dto.BidRequest;
 import com.intuit.auction.service.dto.BidResponse;
 import com.intuit.auction.service.entity.Auction;
 import com.intuit.auction.service.entity.Bid;
 import com.intuit.auction.service.entity.account.Account;
 import com.intuit.auction.service.entity.account.Customer;
-import com.intuit.auction.service.entity.account.Vendor;
 import com.intuit.auction.service.enums.AuctionStatus;
 import com.intuit.auction.service.exceptions.AccessDeniedException;
 import com.intuit.auction.service.exceptions.BadRequestException;
@@ -116,6 +113,7 @@ public class BiddingServiceImpl implements BiddingService {
             bidResponse.setTimeOfBid(bid.getBidTime());
             bidResponse.setUsername(bid.getCustomer().getUsername());
             bidResponse.setBidId(bid.getBidId());
+            bidResponse.setAuctionId(bid.getAuction().getAuctionId());
             response.add(bidResponse);
         }
         return response;
@@ -127,6 +125,7 @@ public class BiddingServiceImpl implements BiddingService {
         bidResponse.setTimeOfBid(bid.getBidTime());
         bidResponse.setUsername(bid.getCustomer().getUsername());
         bidResponse.setBidId(bid.getBidId());
+        bidResponse.setAuctionId(bid.getAuction().getAuctionId());
         return bidResponse;
 
     }
