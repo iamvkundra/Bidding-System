@@ -23,7 +23,7 @@ Assumptions
 There are two types of users: VENDOR and CUSTOMER.
 Vendors: Create auctions for their products.
 Customers: Browse active auctions and place bids.
-A bid must be equal to or greater than the product's base price; otherwise, an error will be thrown.
+A bid must equal or exceed the product's base price; otherwise, an error will be thrown.
 The auction winner is notified automatically via email once the auction ends.
 
 
@@ -53,3 +53,17 @@ Start the application:
 | Swagger | http://localhost:8080/api/docs/swagger-ui/index.html#/ |
 | Application-URL | http://localhost:8080/auction-system/api/ |
 | H2-Database URL Drive | http://localhost:8080/h2-console/login.do?jsessionid=90ac46d456c598727489bf24ad70248f |
+
+
+API:
+Create an account :
+curl --location 'http://localhost:8080/api/v1/bidding-system/account/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "mayank",
+    "accountType": "VENDOR",
+    "email": "mkmayank39@gmail.com",
+    "mobileNumber": "9709874208",
+    "username": "mayankk2",
+    "password": "mayank"
+}'
