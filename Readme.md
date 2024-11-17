@@ -63,7 +63,7 @@ curl --location 'http://localhost:8080/api/v1/bidding-system/account/register' \
     "name": "mayank",
     "accountType": "VENDOR",
     "email": "mkmayank39@gmail.com",
-    "mobileNumber": "9709874208",
+    "mobileNumber": "9202824228",
     "username": "mayankk2",
     "password": "mayank"
 }'
