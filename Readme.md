@@ -57,6 +57,7 @@ Start the application:
 
 API:
 Create an account :
+```sh
 curl --location 'http://localhost:8080/api/v1/bidding-system/account/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -67,3 +68,4 @@ curl --location 'http://localhost:8080/api/v1/bidding-system/account/register' \
     "username": "mayankk2",
     "password": "mayank"
 }'
+```
