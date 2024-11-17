@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  bidding-service:
+    build:
+      context: ../..  # This points to the project root
+      dockerfile: docker/Dockerfile
+    container_name: bidding-service
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_MAIN_ALLOW_CIRCULAR_REFERENCES=true
+      - JWT_SECRET=5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
+      - EMAIL_SENDER=mkmayank39@gmail.com
+      - EMAIL_HOST=localhost
+      - LOGGING_FILE_NAME=/app/logs/myapp.log
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=DEBUG
+      - SPRINGDOC_API_DOCS_PATH=/api/docs/v3/api-docs
+      - SPRINGDOC_SWAGGER_UI_PATH=/api/docs/swagger-ui.html
+    volumes:
+      - ../../logs:/app/logs
+    networks:
+      - bidding-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  bidding-network:
+    driver: bridge
