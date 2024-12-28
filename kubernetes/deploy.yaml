@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bidding-system
+  labels:
+    app: bidding-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bidding-system
+  template:
+    metadata:
+      labels:
+        app: bidding-system
+    spec:
+      containers:
+        - name: bidding-system
+          image: pratigh/biddingsystemrepo:latest
+          ports:
+            - containerPort: 8080   # Corrected indentation
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: bidding-system
+  labels:
+    app: bidding-system
+spec:
+  type: ClusterIP
+  selector:
+    app: bidding-system
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
