@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bidding-system
+  labels:
+    app: bidding-system
+spec:
+  type: ClusterIP
+  selector:
+    app: bidding-system
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
