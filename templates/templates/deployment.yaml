@@ -4,6 +4,7 @@ metadata:
   name: {{ include "templates.fullname" . }}
   labels:
     {{- include "templates.labels" . | nindent 4 }}
+  app: bidding-system
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -22,6 +23,7 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        app: bidding-system
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
