@@ -35,6 +35,12 @@ The auction winner is notified automatically via email once the auction ends.
 | Email Service: | Java mail service |
 
 
+
+
+
+--
+
+
 **How to Run the Application**
 
 - Clone the repository:
