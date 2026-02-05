@@ -7,7 +7,7 @@ This is a microservices-based backend for a bidding system. It enables vendors t
 
 - Create and manage auctions for products.
 - Set base prices for products.
-- Extend the auction end time if needed.
+- Extend the auction end time  if needed.
 ##### Customer Functionality:
 
 - Search for active auctions by category or using custom filters.
